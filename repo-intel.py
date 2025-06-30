@@ -1,12 +1,16 @@
 from github_client import GitHubClient
 from ai_analyzer import AIAnalyzer
 from rich.console import Console
-#from rich.html import HTML
+import os
+
+# TO DO:
+# 1) Merge commit info and issue info into summary
+# 2) Allow for specific file scanning (vulnerability detection)
 
 class RepoIntelClient:
-    def __init__(self, gh_token, ai_token):
-        self.gh = GitHubClient(gh_token)
-        self.ai = AIAnalyzer(ai_token)
+    def __init__(self, ai_key):
+        self.gh = GitHubClient()
+        self.ai = AIAnalyzer(ai_key)
         self.console = Console()
 
     def main_menu(self):
@@ -34,8 +38,8 @@ class RepoIntelClient:
             return
 
         summary = self.ai.summarize_repo(contents)
-        
+
         self.console.print(summary)
 
-client = RepoIntelClient("1234", "1234")
+client = RepoIntelClient(os.environ.get('GENAI_KEY'))
 client.main_menu()
