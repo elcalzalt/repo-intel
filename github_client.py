@@ -2,9 +2,9 @@ import requests
 import base64
 
 class GitHubClient:
-    def get_readme(url):
+    def get_readme(self, url):
         endpoint = "/readme"
-        response = requests.get(url + endpoint, headers={'Accept': 'application/vnd.github+json'})
+        response = requests.get(url + endpoint)
 
         readme_content = None
         if response.status_code == 200:
@@ -16,23 +16,39 @@ class GitHubClient:
 
         return readme_content
 
-    def get_latest_commit(url, default_branch):
+    def get_latest_commit(self, url, default_branch):
         endpoint = f"/commits/{default_branch}"
-        response = requests.get(url + endpoint, headers={'Accept': 'application/vnd.github+json'})
+        response = requests.get(url + endpoint)
 
+        commit_user = None
+        commit_date = None
         commit_message = None
         commit_patch = None
         if response.status_code == 200:
             commit_data = response.json()
-            commit_message = commit_data['message']
-            commit_patch = commit_data['patch']
+            commit_message = commit_data['commit']['message']
+            commit_patch = commit_data['files'][1]['patch']
         else:
             print("Error:", response.status_code, response.content)
 
         return (commit_message, commit_patch)
 
-    def get_open_issues():
-        test = None
+    def get_open_issues(self, url, has_issues):
+        if not has_issues:
+            return None
+        
+        endpoint = "/issues?state=open&sort=created&direction=desc&per_page=5"
+        response = requests.get(url + endpoint)
+
+        open_issues = []
+        if response.status_code == 200:
+            open_issues_data = response.json()
+            for issue in open_issues_data:
+                open_issues.append((issue['title'], issue['body'], issue['created_at']))
+        else:
+            print("Error:", response.status_code, response.content)
+
+        return open_issues
 
     def get_repo_info(self, repo: str):
         url = f"https://api.github.com/repos/{repo}"
@@ -43,8 +59,17 @@ class GitHubClient:
             return False
 
         repo_data = response.json()
+
+        name = repo_data['full_name']
+
         desc = repo_data['description']
 
-        readme = get_readme(url)
+        readme = self.get_readme(url)
 
-        return (desc, readme_content)
+        default_branch = repo_data['default_branch']
+        latest_commit = self.get_latest_commit(url, default_branch)
+
+        has_issues = repo_data['has_issues']
+        open_issues = self.get_open_issues(url, has_issues)
+
+        return (name, desc, readme, latest_commit, open_issues)

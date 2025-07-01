@@ -9,8 +9,8 @@ class AIAnalyzer:
         name = repo_data[0]
         desc = repo_data[1]
         readme = repo_data[2]
-        commit = repo_data[3]
-        issues = repo_data[4]
+        latest_commit = repo_data[3]
+        open_issues = repo_data[4]
 
         system_instruction_file = open("summary_instruction.txt", "rt")
         system_instruction_contents = system_instruction_file.read()
@@ -23,8 +23,8 @@ class AIAnalyzer:
 name: " + name +"\n\
 description: \n" + desc +"\n\
 readme: \n" + readme +"\n\
-latest commit: \n" + commmit +"\n\
-latest issues: \n" + issues + "\n",
+latest commit: \n" + latest_commit +"\n\
+latest 5 open issues: \n" + open_issues + "\n",
         )
 
         return summary.text
