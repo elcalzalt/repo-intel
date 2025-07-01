@@ -9,13 +9,19 @@ class AIAnalyzer:
         desc = repo_data[0]
         readme = repo_data[1]
 
+        system_instruction_file = open("summary_instruction.txt", "rt")
+        system_instruction_contents = system_instruction_file.read()
+        system_instruction_file.close()
         summary = self.client.models.generate_content(
             model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
-                system_instruction="You are a repository analyzer. You'll be given a repository description and readme file contents if available."),
-            contents="Summarize the purpose of this repo:\n\
-description: " + desc +"\n\
-readme: " + readme,
+                system_instruction=system_instruction_contents),
+            contents="Summarize the given repo using the information provided:\n\
+name: " + name +"\n\
+description: \n" + desc +"\n\
+readme: \n" + readme +"\n\
+latest commit: \n" + commmit +"\n\
+latest issues: \n" + issues + "\n",
         )
 
         return summary.text
