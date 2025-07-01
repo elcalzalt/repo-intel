@@ -1,16 +1,17 @@
 from github_client import GitHubClient
 from ai_analyzer import AIAnalyzer
+from cache_db import CacheDatabase
 from rich.console import Console
 import os
 
 # TO DO:
-# 1) Merge commit info and issue info into summary
-# 2) Allow for specific file scanning (vulnerability detection)
+# 1) Allow for specific file scanning (vulnerability detection)
 
 class RepoIntelClient:
     def __init__(self, ai_key):
         self.gh = GitHubClient()
         self.ai = AIAnalyzer(ai_key)
+        self.db = CacheDatabase()
         self.console = Console()
 
     def main_menu(self):
@@ -30,12 +31,24 @@ class RepoIntelClient:
     def summarize_repo(self):
         repo = input("Repo (owner/name): ")
 
-        contents = self.gh.get_repo_info(repo)
-        if not contents:
-            return
+        cache = self.db.get_summary_cache(repo, self.db.summary_cache)
+        summary = cache[0]
+        if cache[2] is False:
 
-        summary = self.ai.summarize(contents)
+            contents = self.gh.get_repo_info(repo)
 
+            if not contents:
+                return
+
+            summary = self.ai.summarize(contents)
+
+            if cache[1]:
+                self.db.delete_entry(repo, self.db.summary_cache)
+
+            self.db.insert_data(self.db.summary_cache, {
+                'repo_name': repo,
+                'response': summary
+            })
         self.console.print(f"\n{summary}\n")
 
 client = RepoIntelClient(os.environ.get('GENAI_KEY'))
