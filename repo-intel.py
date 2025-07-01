@@ -33,7 +33,7 @@ class RepoIntelClient:
     def summarize_repo(self):
         repo = input("Repo (owner/name): ")
 
-        contents = self.gh.get_repo(repo)
+        contents = self.gh.get_repo_info(repo)
         if not contents:
             return
 

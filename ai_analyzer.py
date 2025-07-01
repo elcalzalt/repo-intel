@@ -6,8 +6,11 @@ class AIAnalyzer:
         self.client = genai.Client(api_key=key)
 
     def summarize_repo(self, repo_data):
-        desc = repo_data[0]
-        readme = repo_data[1]
+        name = repo_data[0]
+        desc = repo_data[1]
+        readme = repo_data[2]
+        commit = repo_data[3]
+        issues = repo_data[4]
 
         system_instruction_file = open("summary_instruction.txt", "rt")
         system_instruction_contents = system_instruction_file.read()
