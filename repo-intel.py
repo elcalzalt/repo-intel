@@ -17,16 +17,13 @@ class RepoIntelClient:
         while True:
             choice = input(
                 "1) Repo Summary\n\
-2) Latest Commit Info\n\
-3) Open Issues Info\n\
-4) Quit\n"
+2) Vulnerability Check\n\
+3) Quit\n"
             )
             if choice == "1":
                 self.summarize_repo()
             elif choice == "2":
                 print("choice 2")
-            elif choice == "3":
-                print("choice 3")
             else:
                 break
 
@@ -37,9 +34,9 @@ class RepoIntelClient:
         if not contents:
             return
 
-        summary = self.ai.summarize_repo(contents)
+        summary = self.ai.summarize(contents)
 
-        self.console.print(summary)
+        self.console.print(f"\n{summary}\n")
 
 client = RepoIntelClient(os.environ.get('GENAI_KEY'))
 client.main_menu()

@@ -20,18 +20,20 @@ class GitHubClient:
         endpoint = f"/commits/{default_branch}"
         response = requests.get(url + endpoint)
 
-        commit_user = None
-        commit_date = None
         commit_message = None
-        commit_patch = None
+        commit_patches = []
         if response.status_code == 200:
             commit_data = response.json()
             commit_message = commit_data['commit']['message']
-            commit_patch = commit_data['files'][1]['patch']
+            for file in commit_data['files']:
+                commit_patches.append(file['patch'])
         else:
             print("Error:", response.status_code, response.content)
 
-        return (commit_message, commit_patch)
+        if len(commit_patches) == 0:
+            commit_patches = None
+
+        return (commit_message, commit_patches)
 
     def get_open_issues(self, url, has_issues):
         if not has_issues:
