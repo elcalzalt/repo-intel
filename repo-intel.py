@@ -24,7 +24,7 @@ class RepoIntelClient:
             if choice == "1":
                 self.summarize_repo()
             elif choice == "2":
-                print("choice 2")
+                self.scan_file()
             else:
                 break
 
@@ -56,8 +56,25 @@ class RepoIntelClient:
         file_path = input("File path: ")
 
         cache = self.db.get_recent_cache(repo, self.db.file_cache, file_path)
-        summary = cache[0]
-        print(summary)
+        report = cache[0]
+        if cache[2] is False:
+
+            contents = self.gh.get_file_contents(repo)
+
+            if not contents:
+                return
+
+            report = self.ai.scan_file(contents)
+
+            if cache[1]:
+                self.db.delete_entry(repo, self.db.file_cache, file_path)
+
+            self.db.insert_data(self.db.file_cache, {
+                'repo_name': repo,
+                'file_name': file_path,
+                'response': report
+            })
+        self.console.print(f"\n{report}\n")
 
 client = RepoIntelClient(os.environ.get('GENAI_KEY'))
 client.main_menu()

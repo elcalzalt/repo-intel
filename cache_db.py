@@ -27,12 +27,16 @@ class CacheDatabase:
     def insert_data(self, table, data):
         self.connection.execute(table.insert(), data)
 
-    def delete_entry(self, repo_name, table):
-        stmt = db.delete(table).where(table.c.repo_name == repo_name)
+    def delete_entry(self, repo_name, table, file_path=None):
+        if file_path is not None:
+            stmt = db.delete(table).where(
+                (table.c.repo_name == repo_name) & (table.c.file_name == file_path)
+            )
+        else:
+            stmt = db.delete(table).where(table.c.repo_name == repo_name)
         self.connection.execute(stmt)
 
     def get_recent_cache(self, repo_name, table, file_path=None, max_age_seconds=60):
-        query = None
         if file_path is not None:
             query = db.select(table).where(
                 (table.c.repo_name == repo_name) & (table.c.file_name == file_path)
