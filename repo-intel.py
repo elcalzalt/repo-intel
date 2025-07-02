@@ -4,9 +4,6 @@ from cache_db import CacheDatabase
 from rich.console import Console
 import os
 
-# TO DO:
-# 1) Allow for specific file scanning (vulnerability detection)
-
 class RepoIntelClient:
     def __init__(self, ai_key):
         self.gh = GitHubClient()
