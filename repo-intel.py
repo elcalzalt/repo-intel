@@ -55,21 +55,21 @@ class RepoIntelClient:
         repo = input("Repo (owner/name): ")
         file_path = input("File path: ")
 
-        cache = self.db.get_recent_cache(repo, self.db.file_cache, file_path)
+        cache = self.db.get_recent_cache(repo, self.db.vulnerability_cache, file_path)
         report = cache[0]
         if cache[2] is False:
 
-            contents = self.gh.get_file_contents(repo)
+            contents = self.gh.get_file_contents(repo, file_path)
 
             if not contents:
                 return
 
-            report = self.ai.scan_file(contents)
+            report = self.ai.scan_file(file_path, contents)
 
             if cache[1]:
-                self.db.delete_entry(repo, self.db.file_cache, file_path)
+                self.db.delete_entry(repo, self.db.vulnerability_cache, file_path)
 
-            self.db.insert_data(self.db.file_cache, {
+            self.db.insert_data(self.db.vulnerability_cache, {
                 'repo_name': repo,
                 'file_name': file_path,
                 'response': report

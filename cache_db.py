@@ -19,9 +19,9 @@ class CacheDatabase:
         self.vulnerability_cache = db.Table(
             "vulnerability_cache", self.metadata,
             db.Column("repo_name", db.String(100), primary_key=True),
-            db.Column("file_name", db.String(100)),
             db.Column("response", db.String(10000)),
-            db.Column("created_at", db.DateTime, default=db.func.now())
+            db.Column("created_at", db.DateTime, default=db.func.now()),
+            db.Column("file_name", db.String(100))
         )
 
     def insert_data(self, table, data):

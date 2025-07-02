@@ -56,3 +56,19 @@ latest five open issues:\n" + self.issues_str(open_issues) + "\n",
         )
 
         return summary.text
+
+    def scan_file(self, file_path, contents):
+        system_instruction_file = open("scan_instruction.txt", "rt")
+        system_instruction_contents = system_instruction_file.read()
+        system_instruction_file.close()
+
+        response = self.client.models.generate_content(
+            model="gemini-2.5-flash",
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction_contents),
+            contents="Scan the given file for vulnerabilities:\n\
+file path: " + file_path + "\n\
+file contents:\n" + contents + "\n",
+        )
+
+        return response.text
