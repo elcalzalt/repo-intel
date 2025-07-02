@@ -31,7 +31,7 @@ class RepoIntelClient:
     def summarize_repo(self):
         repo = input("Repo (owner/name): ")
 
-        cache = self.db.get_summary_cache(repo, self.db.summary_cache)
+        cache = self.db.get_recent_cache(repo, self.db.summary_cache)
         summary = cache[0]
         if cache[2] is False:
 
@@ -50,6 +50,14 @@ class RepoIntelClient:
                 'response': summary
             })
         self.console.print(f"\n{summary}\n")
+
+    def scan_file(self):
+        repo = input("Repo (owner/name): ")
+        file_path = input("File path: ")
+
+        cache = self.db.get_recent_cache(repo, self.db.file_cache, file_path)
+        summary = cache[0]
+        print(summary)
 
 client = RepoIntelClient(os.environ.get('GENAI_KEY'))
 client.main_menu()

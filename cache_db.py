@@ -31,8 +31,14 @@ class CacheDatabase:
         stmt = db.delete(table).where(table.c.repo_name == repo_name)
         self.connection.execute(stmt)
 
-    def get_summary_cache(self, repo_name, table, max_age_seconds=60):
-        query = db.select(table).where(table.c.repo_name == repo_name)
+    def get_recent_cache(self, repo_name, table, file_path=None, max_age_seconds=60):
+        query = None
+        if file_path is not None:
+            query = db.select(table).where(
+                (table.c.repo_name == repo_name) & (table.c.file_name == file_path)
+            )
+        else:
+            query = db.select(table).where(table.c.repo_name == repo_name)
         result = self.connection.execute(query).fetchone()
         if result is None:
             return None, False, False
