@@ -54,8 +54,8 @@ class RepoIntelClient:
 
             contents = self.gh.get_repo_info(repo)
 
-            if not contents:
-                self.console.print(f"[bold red]Error:[/] Repository [underline]{repo}[/] not found.")
+            if type(contents) is int:
+                self.console.print(f"[bold red]Error {contents}:[/] Repository [underline]{repo}[/] not found.")
                 Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
                 return
                 
@@ -95,8 +95,13 @@ class RepoIntelClient:
 
             contents = self.gh.get_file_contents(repo, file_path)
 
-            if not contents:
-                self.console.print(f"[bold red]Error:[/] File [underline]{file_path}[/] not found in [link=https://github.com/{repo}]{repo}[/].")
+            if type(contents) is int:
+                self.console.print(f"[bold red]Error {contents}:[/] File [underline]{file_path}[/] not found in [link=https://github.com/{repo}]{repo}[/].")
+                Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
+                return
+
+            if contents is False:
+                self.console.print(f"[bold red]Error:[/] File [underline]{file_path}[/] is not a regular file[/].")
                 Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
                 return
 
