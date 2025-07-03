@@ -116,13 +116,13 @@ class RepoIntelClient:
                 'response': report
             })
 
-            panel = Panel(
-                Markdown(report),
-                title=f"[bold green]Vulnerability report for [underline]{file_path}[/] in [link=https://github.com/{repo}]{repo}[/][/]",
-                border_style="bright_magenta",
-                box=DOUBLE,
-                padding=(1, 2)
-            )
+        panel = Panel(
+            Markdown(report),
+            title=f"[bold green]Vulnerability report for [underline]{file_path}[/] in [link=https://github.com/{repo}]{repo}[/][/]",
+            border_style="bright_magenta",
+            box=DOUBLE,
+            padding=(1, 2)
+        )
         self.console.print(panel)
         Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
         
