@@ -11,8 +11,6 @@ class GitHubClient:
             readme_data = response.json()
             readme_content = base64.b64decode(readme_data['content'])
             readme_content = readme_content.decode('utf-8')
-        else:
-            print("Error:", response.status_code, response.content)
 
         return readme_content
 
@@ -27,8 +25,6 @@ class GitHubClient:
             commit_message = commit_data['commit']['message']
             for file in commit_data['files']:
                 commit_patches.append(file['patch'])
-        else:
-            print("Error:", response.status_code, response.content)
 
         if len(commit_patches) == 0:
             commit_patches = None
@@ -47,8 +43,6 @@ class GitHubClient:
             open_issues_data = response.json()
             for issue in open_issues_data:
                 open_issues.append((issue['title'], issue['body'], issue['created_at']))
-        else:
-            print("Error:", response.status_code, response.content)
 
         return open_issues
 
@@ -57,8 +51,7 @@ class GitHubClient:
         response = requests.get(url)
 
         if response.status_code != 200:
-            print("Error:", response.status_code, response.content)
-            return False
+            return response.status_code
 
         repo_data = response.json()
 
@@ -81,18 +74,15 @@ class GitHubClient:
         response = requests.get(url)
 
         if response.status_code != 200:
-            print("Error:", response.status_code, response.content)
-            return False
+            return response.status_code
 
         file_data = response.json()
 
         if type(file_data) is list:
-            print("Error: Multiple files found at the specified path. Please specify a file path.")
             return False
 
         file_type = file_data['type']
         if file_type != 'file':
-            print("Error: The specified path does not point to a file.")
             return False
 
         file_content = base64.b64decode(file_data['content'])
