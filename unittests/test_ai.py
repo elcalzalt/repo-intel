@@ -14,6 +14,7 @@ class TestAI(unittest.TestCase):
         self.addCleanup(patcher.stop)
         self.mock_client = patcher.start()
         self.ai = AIAnalyzer(os.environ.get('GENAI_KEY'))
+        
     @patch('ai_analyzer.genai.Client')
     def test_summarize(self, mock_client):
         mock_response = Mock()
