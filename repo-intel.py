@@ -101,7 +101,7 @@ class RepoIntelClient:
                 return
 
             if contents is False:
-                self.console.print(f"[bold red]Error:[/] File [underline]{file_path}[/] is not a regular file[/].")
+                self.console.print(f"[bold red]Error:[/] File [underline]{file_path}[/] is not a regular file.")
                 Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
                 return
 
