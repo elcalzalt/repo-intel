@@ -33,21 +33,19 @@ class RepoIntelClient:
 
             choice = Prompt.ask(
                 "[bold yellow]Select an option[/]",
-                choices=["1", "2", "3"],
-                default="3"
+                choices=["1", "2", "3"]
             )
             if choice == "1":
                 self.summarize_repo()
             elif choice == "2":
                 self.scan_file()
             else:
-                self.console.print("\\n[bold red]Goodbye![/]")
+                self.console.print("[bold red]Goodbye!")
                 break
 
     def summarize_repo(self):
         repo = Prompt.ask(
-            "[bold cyan]Enter repository[/] [dim](owner/name)[/]",
-            default="owner/name"
+            "[bold cyan]Enter repository[/] [dim](e.g. owner/name)[/]"
         )
 
         cache = self.db.get_recent_cache(repo, self.db.summary_cache)
@@ -58,6 +56,7 @@ class RepoIntelClient:
 
             if not contents:
                 self.console.print(f"[bold red]Error:[/] Repository [underline]{repo}[/] not found.")
+                Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
                 return
                 
 
@@ -79,19 +78,16 @@ class RepoIntelClient:
             padding=(1, 2)
         )
         self.console.print(panel)
-        Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]", default="")
+        Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
 
 
     def scan_file(self):
         repo = Prompt.ask(
-            "[bold cyan]Enter repository[/] [dim](owner/name)[/]", 
-            default="owner/name"
+            "[bold cyan]Enter repository[/] [dim](e.g. owner/name)[/]"
         )
         file_path = Prompt.ask(
-            "[bold cyan]Enter file path[/] [dim](e.g. src/app.py)[/]", 
-            default="path/to/file.py"
+            "[bold cyan]Enter file path[/] [dim](e.g. path/to/file)[/]"
         )
-    
 
         cache = self.db.get_recent_cache(repo, self.db.vulnerability_cache, file_path)
         report = cache[0]
@@ -101,6 +97,7 @@ class RepoIntelClient:
 
             if not contents:
                 self.console.print(f"[bold red]Error:[/] File [underline]{file_path}[/] not found in [link=https://github.com/{repo}]{repo}[/].")
+                Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
                 return
 
             report = self.ai.scan_file(file_path, contents)
@@ -113,8 +110,16 @@ class RepoIntelClient:
                 'file_name': file_path,
                 'response': report
             })
-        
-        self.console.print(f"\n{report}\n")
+
+            panel = Panel(
+                Markdown(report),
+                title=f"[bold green]Vulnerability report for [underline]{file_path}[/] in [link=https://github.com/{repo}]{repo}[/][/]",
+                border_style="bright_magenta",
+                box=DOUBLE,
+                padding=(1, 2)
+            )
+        self.console.print(panel)
+        Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
         
 
 client = RepoIntelClient(os.environ.get('GENAI_KEY'))
