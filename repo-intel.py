@@ -95,7 +95,14 @@ class RepoIntelClient:
             "[bold cyan]Enter repository[/] [dim](e.g. owner/name)[/]"
         )
 
-        cache = self.db.get_recent_cache(repo, self.db.summary_cache)
+        updated_at = self.gh.get_update_date(repo)
+
+        if type(updated_at) is int:
+            self.console.print(f"[bold red]Error {updated_at}")
+            Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
+            return
+
+        cache = self.db.get_recent_cache(repo, self.db.summary_cache, updated_at)
         summary = cache[0]
         if cache[2] is False:
 
@@ -114,7 +121,8 @@ class RepoIntelClient:
 
             self.db.insert_data(self.db.summary_cache, {
                 'repo_name': repo,
-                'response': summary
+                'response': summary,
+                'updated_at': updated_at
             })
 
         if self.user_manager.is_logged_in():
@@ -149,8 +157,14 @@ class RepoIntelClient:
             "[bold cyan]Enter file path[/] [dim](e.g. path/to/file)[/]"
         )
 
-        user_id = self.user_manager.current_user_id or 0
-        cache = self.db.get_recent_cache(repo, self.db.vulnerability_cache, file_path)
+        updated_at = self.gh.get_update_date(repo)
+
+        if type(updated_at) is int:
+            self.console.print(f"[bold red]Error {updated_at}")
+            Prompt.ask("\n[dim]Press [bold yellow]Enter[/] to return to menu[/]")
+            return
+        
+        cache = self.db.get_recent_cache(repo, self.db.vulnerability_cache, updated_at, file_path)
         report = cache[0]
         if cache[2] is False:
 
@@ -174,7 +188,8 @@ class RepoIntelClient:
             self.db.insert_data(self.db.vulnerability_cache, {
                 'repo_name': repo,
                 'file_name': file_path,
-                'response': report
+                'response': report,
+                'updated_at': updated_at
             })
 
         if self.user_manager.is_logged_in():

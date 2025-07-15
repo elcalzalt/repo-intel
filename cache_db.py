@@ -14,13 +14,13 @@ class CacheDatabase:
             "summary_cache", self.metadata,
             db.Column("repo_name", db.String(100), primary_key=True),
             db.Column("response", db.String(10000)),
-            db.Column("created_at", db.DateTime, default=db.func.now())
+            db.Column("updated_at", db.String(20))
         )
         self.vulnerability_cache = db.Table(
             "vulnerability_cache", self.metadata,
             db.Column("repo_name", db.String(100), primary_key=True),
             db.Column("response", db.String(10000)),
-            db.Column("created_at", db.DateTime, default=db.func.now()),
+            db.Column("updated_at", db.String(20)),
             db.Column("file_name", db.String(100))
         )
 
@@ -36,7 +36,7 @@ class CacheDatabase:
             stmt = db.delete(table).where(table.c.repo_name == repo_name)
         self.connection.execute(stmt)
 
-    def get_recent_cache(self, repo_name, table, file_path=None, max_age_seconds=60):
+    def get_recent_cache(self, repo_name, table, updated_at, file_path=None):
         if file_path is not None:
             query = db.select(table).where(
                 (table.c.repo_name == repo_name) & (table.c.file_name == file_path)
@@ -46,9 +46,8 @@ class CacheDatabase:
         result = self.connection.execute(query).fetchone()
         if result is None:
             return None, False, False
-        response, created_at = result[1], result[2]
-        now = datetime.utcnow()
-        if (now - created_at).total_seconds() < max_age_seconds:
+        response, prev_updated_at = result[1], result[2]
+        if prev_updated_at == updated_at:
             return response, True, True
         else:
             return response, True, False

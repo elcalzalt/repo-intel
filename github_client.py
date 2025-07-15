@@ -89,3 +89,14 @@ class GitHubClient:
         file_content = file_content.decode('utf-8')
 
         return file_content
+    
+    def get_update_date(self, repo):
+        url = f"https://api.github.com/repos/{repo}"
+        response = requests.get(url)
+
+        if response.status_code != 200:
+            return response.status_code
+
+        repo_data = response.json()
+
+        return repo_data['updated_at']
