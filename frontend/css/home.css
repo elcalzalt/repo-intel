@@ -1,3 +1,4 @@
+/* Updated CSS including dropdown styling */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
@@ -112,6 +113,8 @@ nav li a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 100;
 }
 
 .search-box {
@@ -119,15 +122,16 @@ nav li a:hover {
     align-items: center;
     background: #fff;
     border-radius: 50px;
-    padding: 0.5em 1em;
-    width: 80%;
-    max-width: 500px;
+    padding: 0.5em 1.2em;
+    width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2;
 }
 
 .search-box i {
     color: #888;
-    margin-right: 0.5em;
+    margin-right: 0.75em;
+    font-size: 1rem;
 }
 
 #searchInput {
@@ -136,9 +140,41 @@ nav li a:hover {
     font-size: 1em;
     outline: none;
     background: transparent;
-    color: inherit;
+    color: #222;
+    caret-color: #222;
 }
 
+/* Dropdown inside search-box */
+#suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 3;
+    display: none;
+    color: #333;
+}
+
+#suggestions li {
+    padding: 0.75em 1em;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background 0.2s;
+}
+
+#suggestions li:hover {
+    background: #f1f1f1;
+}
+
+
+/* === Categories === */
 .categories {
     display: flex;
     gap: 1em;
@@ -153,28 +189,32 @@ nav li a:hover {
     border-radius: 20px;
     font-size: 0.9em;
     cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     color: #fff;
 }
 
 .categories span:hover {
     background: #00adb5;
     color: #fff;
+    box-shadow: 0 0 8px #00adb5aa;
 }
 
 .popular-repos {
     padding: 3em 2em;
     background: #fff;
     transition: background 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 3em;
 }
 
-/* Carousel container */
+.how-it-works {
+    padding-top: 2em;
+}
+
 .carousel-container {
     position: relative;
 }
 
-
-/* Horizontal scroll container */
 .repo-cards {
     display: flex;
     gap: 1.5em;
@@ -184,7 +224,6 @@ nav li a:hover {
     padding-bottom: 1em;
 }
 
-/* Scrollbar styling */
 .repo-cards::-webkit-scrollbar {
     height: 8px;
 }
@@ -203,7 +242,6 @@ nav li a:hover {
     background: #007f8f;
 }
 
-/* Repo Cards */
 .repo-card {
     flex: 0 0 280px;
     background: white;
@@ -269,7 +307,6 @@ footer {
 }
 
 /* ===== Dark Mode Styles ===== */
-
 .dark {
     background-color: #1a1a1a;
     color: #f0f0f0;
@@ -286,10 +323,20 @@ footer {
     color: #fff;
 }
 
+.dark #suggestions {
+    background: #2b2b2b;
+    border: 1px solid #555;
+    color: #e0e0e0;
+}
+
+.dark #suggestions li:hover {
+    background: #3a3a3a;
+}
+
 .dark .popular-repos,
 .dark .how-it-works {
     background-color: #2a2e35;
-    border-radius: 16px;
+    border-radius: 0;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     color: #e0e0e0;
@@ -317,12 +364,22 @@ footer {
     color: #00ffc3;
 }
 
-
 .dark .categories span {
     background: #333;
     color: #fff;
 }
 
+.dark .categories span:hover {
+    background: #00adb5;
+    color: #fff;
+    box-shadow: 0 0 10px #00ffc3bb;
+}
+
 .dark nav ul {
     background: #2c2c2c;
+}
+
+.dark #searchInput {
+    color: #e0e0e0;
+    caret-color: #e0e0e0;
 }

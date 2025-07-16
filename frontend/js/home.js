@@ -38,17 +38,39 @@ mockRepos.forEach(repo => {
 searchInput.addEventListener('input', () => {
     const input = searchInput.value.toLowerCase();
     suggestions.innerHTML = '';
-    if (!input) return;
+
+    if (!input) {
+        suggestions.style.display = 'none';
+        return;
+    }
+
     const filtered = mockRepos.filter(repo => repo.name.toLowerCase().includes(input));
+
+    if (filtered.length === 0) {
+        suggestions.style.display = 'none';
+        return;
+    }
+
     filtered.forEach(repo => {
         const li = document.createElement('li');
         li.textContent = repo.name;
         li.onclick = () => {
             alert(`You selected ${repo.name}`);
+            suggestions.style.display = 'none';
+            searchInput.value = repo.name;
         };
         suggestions.appendChild(li);
     });
+
+    suggestions.style.display = 'block';
 });
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrapper')) {
+        suggestions.style.display = 'none';
+    }
+});
+
 
 // Hamburger toggle for nav menu
 hamburger.addEventListener('click', () => {
