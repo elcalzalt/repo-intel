@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repo Intel | Home</title>
+    <link rel="stylesheet" href="../static/css/home.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <header>
+        <div class="logo">Repo<span>Intel</span></div>
+
+        <div class="nav-actions">
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul id="nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#profile">Profile</a></li>
+                    <li><a href="#login">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Discover, Analyze, and Contribute</h1>
+            <p>Find top GitHub repositories tailored to your interests.</p>
+
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for repositories, topics..." />
+                </div>
+                <ul id="suggestions"></ul>
+                <div class="categories">
+                    <span>🌐 Web Dev</span>
+                    <span>🧠 AI</span>
+                    <span>📱 Mobile</span>
+                    <span>🧪 Data Science</span>
+                    <span>🔒 Security</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="popular-repos">
+            <h2>🔥 Top Active Repositories</h2>
+            <div class="carousel-container">
+                <div class="repo-cards" id="repoCards">
+                    {% for repo in repos %}
+                    <div class="repo-card">
+                        <h3>{{ repo.name }}</h3>
+                        <p>{{ repo.description }}</p>
+                        <small>⭐ {{ repo.stars }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h2>🔍 How It Works</h2>
+            <div class="steps">
+                <div>
+                    <h3>1. Search</h3>
+                    <p>Use natural language or categories to find relevant repositories.</p>
+                </div>
+                <div>
+                    <h3>2. Analyze</h3>
+                    <p>Get summarized insights and scan for issues or security warnings.</p>
+                </div>
+                <div>
+                    <h3>3. Bookmark</h3>
+                    <p>Save your favorites and revisit them anytime on your profile.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Repo Intel &copy; 2025</p>
+    </footer>
+    <script defer src="../static/js/home.js"></script>
+</body>
+
+</html>
