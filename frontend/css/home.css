@@ -41,6 +41,8 @@ nav ul {
     transform: translateY(-10px);
     transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
     list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     background-color: #393e46;
@@ -60,12 +62,18 @@ nav ul.active {
     transform: translateY(0);
 }
 
+nav li {
+    width: 100%;
+}
+
 nav li a {
-    color: #fff;
-    padding: 1em;
-    text-decoration: none;
     display: block;
+    width: 100%;
+    padding: 1em;
+    color: #fff;
+    text-decoration: none;
     transition: background 0.3s;
+    box-sizing: border-box;
 }
 
 nav li a:hover {
