@@ -245,17 +245,43 @@ nav li a:hover {
 
 .dark .profile {
     background: #2a2e35;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    color: #e0e0e0;
+}
+
+.dark .user-info h2 {
+    color: #f0f0f0;
+}
+
+.dark .user-info p {
+    color: #cccccc;
 }
 
 .dark .repo-card {
     background: #39404a;
     color: #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.dark .repo-card h3 {
+    color: #f0f0f0;
+}
+
+.dark .repo-card p {
+    color: #cccccc;
+}
+
+.dark .repo-card small {
+    color: #00ffc3;
 }
 
 .dark .search-history-list li {
     background: #39404a;
     color: #e0e0e0;
+}
+
+.dark .search-history-list li:hover {
+    background: #3a3a3a;
 }
 
 .dark nav ul {
