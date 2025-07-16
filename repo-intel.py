@@ -52,7 +52,9 @@ class RepoIntelClient:
             self.user_manager.add_to_search_history('Summary', repo)
 
         return summary
-
+    
+    def get_file_tree(self, repo, path=""):
+        return self.gh.get_directory(repo, path)
 
     def scan_file(self, repo, file_path):
         updated_at = self.gh.get_update_date(repo)
