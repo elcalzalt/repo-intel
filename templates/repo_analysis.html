@@ -1,4 +1,9 @@
 {% extends "layout.html" %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/repo_analysis.css') }}" />
+{% endblock %}
+
 {% block content %}
 <main>
     <section class="repo-header">
