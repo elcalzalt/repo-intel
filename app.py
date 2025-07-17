@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from home import *
 from user_manager import UserManager
+from cache_db import CacheDatabase
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
 
-user_manager = UserManager()
+cache = CacheDatabase()
+user_manager = UserManager(cache)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,32 +116,14 @@ def api_summarize():
         return redirect(url_for('login'))
     
     data = request.get_json()
-    repo_url = data.get('repo_url')
     repo_name = data.get('repo_name')
     
     # Mock summary - replace with actual AI analysis
-    summary = f"""
-    This repository '{repo_name}' appears to be a well-structured project with the following characteristics:
-    
-    🎯 Purpose: The repository serves as a comprehensive solution for repository analysis and insights.
-    
-    📁 Structure: 
-    - Well-organized codebase with clear separation of concerns
-    - Includes proper documentation and setup instructions
-    - Follows modern development practices
-    
-    🔧 Key Features:
-    - Repository search and discovery
-    - Automated code analysis
-    - Security scanning capabilities
-    - User-friendly web interface
-    
-    📊 Assessment: This is an active project with regular updates and good maintenance practices.
-    """
+    summary = user_manager.summarize_repo(repo_name)
     
     return jsonify({
         'success': True,
-        'summary': summary.strip()
+        'summary': summary
     })
 
 @app.route('/api/scan', methods=['POST'])

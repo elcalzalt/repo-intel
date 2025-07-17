@@ -3,15 +3,22 @@ import hashlib
 import secrets
 from datetime import datetime
 from typing import Optional, List, Tuple, Any
+from github_client import GitHubClient
+from ai_analyzer import AIAnalyzer
+import os
 
 class UserManager:
-    def __init__(self, db_path='sqlite:///users.db'):
+    def __init__(self, cache, db_path='sqlite:///users.db'):
         self.engine = db.create_engine(db_path)
         self.metadata = db.MetaData()
         self.define_tables()
         self.metadata.create_all(self.engine)
         self.current_user_id = None
         self.current_username = None
+        self.gh = GitHubClient()
+        genai_key = os.environ.get('GENAI_KEY', '')
+        self.ai = AIAnalyzer(genai_key)
+        self.db = cache
 
     def define_tables(self):
         self.users = db.Table(
@@ -253,3 +260,34 @@ class UserManager:
         except Exception as e:
             print(f"Error updating bookmark: {e}")
             return False
+
+    def summarize_repo(self, repo):
+        updated_at = self.gh.get_update_date(repo)
+
+        if type(updated_at) is int:
+            return updated_at
+
+        cache = self.db.get_recent_cache(repo, self.db.summary_cache, updated_at)
+        summary = cache[0]
+        if cache[2] is False:
+
+            contents = self.gh.get_repo_info(repo)
+
+            if type(contents) is int:
+                return contents
+
+            summary = self.ai.summarize(contents)
+
+            if cache[1]:
+                self.db.delete_entry(repo, self.db.summary_cache)
+
+            self.db.insert_data(self.db.summary_cache, {
+                'repo_name': repo,
+                'response': summary,
+                'updated_at': updated_at
+            })
+
+        if self.is_logged_in():
+            self.add_to_search_history('Summary', repo)
+
+        return summary

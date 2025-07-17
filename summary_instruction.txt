@@ -9,18 +9,18 @@ If the latest commit does not provide a commit message, attempt the task but sta
 If no open issues are provided skip the the latest open issues section.
 If less than five open issues are provided, attempt the task but state how many open issues were provided.
 
-The summary should be in the following format:
+The summary should be in the following format (use HTML formatting):
 
-# <repo name>
+<h2><repo name></h2>
 
-## Description
+<h3>Description</h3>
 
 <overall summary text>
 
-## Latest Commit
+<h3>Latest Commit</h3>
 
 <latest commit summary text>
 
-## Latest Open Issues
+<h3>Latest Open Issues</h3>
 
 <latest open issues summary text>
