@@ -25,9 +25,8 @@
             </div>
             <nav>
                 <ul id="nav-links">
-                    <li><a href="#">Home</a></li>
+                    <li><a href="#home">Home</a></li>
                     <li><a href="#profile">Profile</a></li>
-                    <li><a href="#login">Login</a></li>
                 </ul>
             </nav>
         </div>
@@ -59,7 +58,7 @@
             <div class="carousel-container">
                 <div class="repo-cards" id="repoCards">
                     {% for repo in repos %}
-                    <div class="repo-card">
+                    <div class="repo-card" onclick="window.open('{{ repo.link }}', '_blank')">
                         <h3>{{ repo.name }}</h3>
                         <p>{{ repo.description }}</p>
                         <small>⭐ {{ repo.stars }}</small>

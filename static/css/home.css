@@ -136,7 +136,7 @@ nav li a:hover {
     font-size: 1em;
     outline: none;
     background: transparent;
-    color: inherit;
+    color: black;
 }
 
 .categories {
@@ -325,4 +325,9 @@ footer {
 
 .dark nav ul {
     background: #2c2c2c;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }

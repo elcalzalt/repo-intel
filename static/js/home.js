@@ -7,32 +7,32 @@ const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
 
 // Mock repo data
-const mockRepos = [
-    { name: 'awesome-python', stars: 100000, description: 'A curated list of awesome Python frameworks.' },
-    { name: 'freeCodeCamp', stars: 350000, description: 'Learn to code for free.' },
-    { name: '30-seconds-of-code', stars: 100000, description: 'Short JavaScript code snippets.' },
-    { name: 'react', stars: 200000, description: 'A JavaScript library for building user interfaces.' },
-    { name: 'vue', stars: 210000, description: 'The Progressive JavaScript Framework.' },
-    { name: 'tensorflow', stars: 170000, description: 'An end-to-end open source machine learning platform.' },
-    { name: 'django', stars: 66000, description: 'The Web framework for perfectionists with deadlines.' },
-    { name: 'flask', stars: 60000, description: 'A lightweight WSGI web application framework.' },
-    { name: 'linux', stars: 140000, description: 'Linux kernel source tree.' },
-    { name: 'node', stars: 95000, description: 'Node.js JavaScript runtime.' },
-    { name: 'kubernetes', stars: 100000, description: 'Production-Grade Container Scheduling and Management.' },
-    { name: 'flutter', stars: 125000, description: 'UI toolkit for building natively compiled applications.' },
-];
+// const mockRepos = [
+//     { name: 'awesome-python', stars: 100000, description: 'A curated list of awesome Python frameworks.' },
+//     { name: 'freeCodeCamp', stars: 350000, description: 'Learn to code for free.' },
+//     { name: '30-seconds-of-code', stars: 100000, description: 'Short JavaScript code snippets.' },
+//     { name: 'react', stars: 200000, description: 'A JavaScript library for building user interfaces.' },
+//     { name: 'vue', stars: 210000, description: 'The Progressive JavaScript Framework.' },
+//     { name: 'tensorflow', stars: 170000, description: 'An end-to-end open source machine learning platform.' },
+//     { name: 'django', stars: 66000, description: 'The Web framework for perfectionists with deadlines.' },
+//     { name: 'flask', stars: 60000, description: 'A lightweight WSGI web application framework.' },
+//     { name: 'linux', stars: 140000, description: 'Linux kernel source tree.' },
+//     { name: 'node', stars: 95000, description: 'Node.js JavaScript runtime.' },
+//     { name: 'kubernetes', stars: 100000, description: 'Production-Grade Container Scheduling and Management.' },
+//     { name: 'flutter', stars: 125000, description: 'UI toolkit for building natively compiled applications.' },
+// ];
 
 // Render repo cards inside carousel container
-mockRepos.forEach(repo => {
-    const card = document.createElement('div');
-    card.classList.add('repo-card');
-    card.innerHTML = `
-    <h3>${repo.name}</h3>
-    <p>${repo.description}</p>
-    <small>⭐ ${repo.stars}</small>
-  `;
-    repoCards.appendChild(card);
-});
+// mockRepos.forEach(repo => {
+//     const card = document.createElement('div');
+//     card.classList.add('repo-card');
+//     card.innerHTML = `
+//     <h3>${repo.name}</h3>
+//     <p>${repo.description}</p>
+//     <small>⭐ ${repo.stars}</small>
+//   `;
+//     repoCards.appendChild(card);
+// });
 
 // Search suggestions
 searchInput.addEventListener('input', () => {

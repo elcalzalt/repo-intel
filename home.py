@@ -3,15 +3,15 @@ from datetime import datetime, timedelta
 
 # api_key = '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'
 
-def getTrendy(language="java", limit=12):
+def getTrendy():
     six_months_ago = (datetime.now() - timedelta(days=183)).strftime('%Y-%m-%d')
-    query = f"language:{language} created:>{six_months_ago}"
+    query = f"created:>{six_months_ago}"
     url = "https://api.github.com/search/repositories"
     params = {
         "q": query,
         "sort": "stars",
         "order": "desc",
-        "per_page": limit
+        "per_page": 20
     }
 
     headers = {
@@ -25,9 +25,9 @@ def getTrendy(language="java", limit=12):
         {
             "name": repo["name"],
             "stars": repo["stargazers_count"],
-            "description": repo["description"] or ""
+            "description": repo["description"] or "",
+            "link": repo["html_url"]
         }
         for repo in data.get("items", [])
     ]
-
     return result
