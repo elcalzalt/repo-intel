@@ -1,6 +1,6 @@
 class AuthManager {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';  // Your backend API URL
+        this.apiBaseUrl = 'http://localhost:5001/api';
         this.init();
     }
 
