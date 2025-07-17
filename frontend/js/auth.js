@@ -94,9 +94,9 @@ class AuthManager {
                 sessionStorage.setItem('user', JSON.stringify(response.user));
                 sessionStorage.setItem('isLoggedIn', 'true');
                 
-                // Redirect to dashboard after short delay
+                // Redirect to profile page after short delay
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
+                    window.location.href = 'profile.html';
                 }, 1500);
             } else {
                 this.showMessage(response.message || 'Login failed. Please check your credentials.', 'error');
@@ -314,7 +314,7 @@ class AuthManager {
         if (isLoggedIn && user) {
             this.showMessage('You are already logged in. Redirecting...', 'info');
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = 'profile.html';
             }, 2000);
         }
     }
