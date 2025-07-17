@@ -13,10 +13,9 @@
                 <p class="repo-owner">by {{ repo.owner }}</p>
                 <p class="repo-description">{{ repo.description or "No description available" }}</p>
                 <div class="repo-stats">
-                    <span class="stat">⭐ {{ repo.stars or 0 }}</span>
-                    <span class="stat">🍴 {{ repo.forks or 0 }}</span>
-                    <span class="stat">📝 {{ repo.language or "Unknown" }}</span>
-                    <span class="stat">📅 Updated {{ repo.updated_at or "Unknown" }}</span>
+                    <span class="stat">⭐ {{ repo.stars or "-" }}</span>
+                    <span class="stat">🍴 {{ repo.forks or "-" }}</span>
+                    <span class="stat">📅 Updated {{ repo.updated_at or "-" }}</span>
                 </div>
             </div>
         </div>

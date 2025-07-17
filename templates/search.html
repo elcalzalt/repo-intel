@@ -10,14 +10,25 @@
     {% if results %}
     <div class="repo-cards">
         {% for repo in results %}
-        <div class="repo-card" onclick="window.location.href='/repo/{{ repo.name }}'">
+        <form method="post"
+              action="{{ url_for('repo_analysis', repo_name=repo.name) }}"
+              class="repo-card"
+              onclick="this.submit()">
+            <input type="hidden" name="full_name" value="{{ repo.name }}" />
+            <input type="hidden" name="name" value="{{ repo.name.split('/')[-1] }}" />
+            <input type="hidden" name="owner" value="{{ repo.name.split('/')[0] }}" />
+            <input type="hidden" name="description" value="{{ repo.description }}" />
+            <input type="hidden" name="url" value="{{ repo.url }}" />
+            <input type="hidden" name="stars" value="{{ repo.stars }}" />
+            <input type="hidden" name="forks" value="{{ repo.forks }}" />
+            <input type="hidden" name="updated_at" value="{{ repo.updated_at }}" />
             <h3>{{ repo.name }}</h3>
             <p>{{ repo.description }}</p>
             <small>⭐ {{ repo.stars }}</small>
             <div class="repo-actions">
                 <span class="action-hint">Click to analyze →</span>
             </div>
-        </div>
+        </form>
         {% endfor %}
     </div>
     {% else %}

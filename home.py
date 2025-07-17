@@ -20,11 +20,12 @@ def getTrendy():
     data = response.json()
     return [
         {
-            # Use full_name as the `name` key so templates can treat repo.name uniformly
             "name": repo["full_name"],
+            "description": repo["description"],
+            "url": repo["html_url"],
             "stars": repo["stargazers_count"],
-            "description": repo["description"] or "",
-            "url": repo["html_url"]
+            "forks": repo["forks_count"],
+            "updated_at": repo["updated_at"]
         }
         for repo in data.get("items", [])
     ]
@@ -47,9 +48,11 @@ def search(query):
     return [
         {
             "name": repo["full_name"],
+            "description": repo["description"],
+            "url": repo["html_url"],
             "stars": repo["stargazers_count"],
-            "description": repo["description"] or "",
-            "url": repo["html_url"]
+            "forks": repo["forks_count"],
+            "updated_at": repo["updated_at"]
         }
         for repo in data.get("items", [])
     ]

@@ -78,30 +78,31 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
-@app.route('/repo/<path:repo_name>')
+@app.route('/repo/<path:repo_name>', methods=['GET', 'POST'])
 def repo_analysis(repo_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    # Extract owner and repo name from the path
-    if '/' in repo_name:
-        owner, name = repo_name.split('/', 1)
-    else:
-        # Fallback if no owner specified
-        owner = "unknown"
-        name = repo_name
-    
-    # Mock repo data - in real implementation, fetch from GitHub API
+    # Use full repo info from form
+    full_name = request.form.get('full_name', repo_name)
+    owner = request.form.get('owner', full_name.split('/', 1)[0])
+    name = request.form.get('name', full_name.split('/', 1)[1] if '/' in full_name else full_name)
+    description = request.form.get('description', '')
+    url = request.form.get('url', '')
+    stars = request.form.get('stars', '')
+    forks = request.form.get('forks', '')
+    updated_at = request.form.get('updated_at', '')
+
+    # Build repo_data
     repo_data = {
         'name': name,
         'owner': owner,
-        'full_name': repo_name,
-        'description': f'Repository {name} by {owner}',
-        'url': f'https://github.com/{repo_name}',
-        'stars': '1.2k',
-        'forks': '345',
-        'language': 'Python',
-        'updated_at': '2 days ago'
+        'full_name': full_name,
+        'description': description,
+        'url': url,
+        'stars': stars,
+        'forks': forks,
+        'updated_at': updated_at
     }
     
     return render_template('repo_analysis.html', repo=repo_data)
