@@ -1,0 +1,337 @@
+/* Repository Analysis Page Styles */
+.repo-header {
+    background: linear-gradient(135deg, #00adb5 0%, #393e46 100%);
+    color: white;
+    padding: 3em 2em;
+    border-radius: 12px;
+    margin-bottom: 2em;
+}
+
+.repo-info {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.repo-meta h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.repo-owner {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 1em;
+}
+
+.repo-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+    opacity: 0.95;
+}
+
+.repo-stats {
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+}
+
+/* Action Grid */
+.repo-actions {
+    margin-bottom: 3em;
+}
+
+.repo-actions h2 {
+    text-align: center;
+    margin-bottom: 2em;
+    color: #222831;
+    font-size: 2rem;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2em;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.action-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2em;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #00adb5;
+}
+
+.action-icon {
+    font-size: 3rem;
+    margin-bottom: 1em;
+}
+
+.action-card h3 {
+    color: #222831;
+    margin-bottom: 1em;
+    font-size: 1.3rem;
+}
+
+.action-card p {
+    color: #666;
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+/* Button Styles */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    display: inline-block;
+    min-width: 140px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #00adb5 0%, #007f8f 100%);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 173, 181, 0.3);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #393e46 0%, #222831 100%);
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(57, 62, 70, 0.3);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+}
+
+.btn-accent:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #00adb5;
+    color: #00adb5;
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: #00adb5;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn.bookmarked {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.btn-spinner {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Results Section */
+.results-section {
+    background: #f8f9fa;
+    padding: 2em;
+    border-radius: 12px;
+    margin-bottom: 2em;
+}
+
+.results-section h2 {
+    color: #222831;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+
+.results-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.result-panel {
+    background: white;
+    border-radius: 8px;
+    padding: 2em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-panel h3 {
+    color: #222831;
+    margin-bottom: 1.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid #00adb5;
+}
+
+.summary-content {
+    line-height: 1.8;
+    color: #444;
+}
+
+.summary-text {
+    font-size: 1.1rem;
+    white-space: pre-line;
+}
+
+/* Scan Results */
+.scan-results h4 {
+    color: #222831;
+    margin: 1.5em 0 1em 0;
+}
+
+.scan-results ul {
+    list-style: none;
+    padding: 0;
+}
+
+.scan-results li {
+    padding: 0.8em 1em;
+    margin: 0.5em 0;
+    border-radius: 6px;
+    border-left: 4px solid;
+}
+
+.issue-high {
+    background: #fef5f5;
+    border-left-color: #e74c3c;
+    color: #721c24;
+}
+
+.issue-medium {
+    background: #fff3cd;
+    border-left-color: #f39c12;
+    color: #856404;
+}
+
+.issue-low {
+    background: #e8f5e8;
+    border-left-color: #27ae60;
+    color: #155724;
+}
+
+.security-warning {
+    background: #fff3cd;
+    border-left-color: #ff6b6b;
+    color: #721c24;
+}
+
+.no-issues {
+    text-align: center;
+    color: #27ae60;
+    font-size: 1.2rem;
+    padding: 2em;
+    background: #e8f5e8;
+    border-radius: 8px;
+}
+
+/* Navigation */
+.navigation {
+    text-align: center;
+    margin-top: 2em;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .repo-header {
+        padding: 2em 1em;
+    }
+    
+    .repo-meta h1 {
+        font-size: 2rem;
+    }
+    
+    .repo-stats {
+        gap: 1em;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+    }
+    
+    .action-card {
+        padding: 1.5em;
+    }
+    
+    .results-section {
+        padding: 1.5em;
+    }
+    
+    .result-panel {
+        padding: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .repo-header {
+        padding: 1.5em 1em;
+    }
+    
+    .repo-meta h1 {
+        font-size: 1.8rem;
+    }
+    
+    .repo-stats {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+    
+    .action-card {
+        padding: 1em;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}

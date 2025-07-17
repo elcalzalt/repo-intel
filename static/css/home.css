@@ -392,3 +392,22 @@ footer {
     color: #e0e0e0;
     caret-color: #e0e0e0;
 }
+
+.repo-actions {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid #eee;
+}
+
+.action-hint {
+    font-size: 0.8em;
+    color: #666;
+    font-style: italic;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.repo-card:hover .action-hint {
+    opacity: 1;
+    color: #00adb5;
+}
