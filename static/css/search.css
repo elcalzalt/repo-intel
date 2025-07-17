@@ -1,0 +1,37 @@
+.repo-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 3–4 per row depending on screen size */
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.repo-card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.repo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.repo-card h3 {
+    margin: 0 0 0.5rem;
+}
+
+.repo-card p {
+    margin: 0 0 0.5rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.repo-card small {
+    color: #888;
+}
