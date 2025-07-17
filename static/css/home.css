@@ -270,6 +270,7 @@ nav li a:hover {
     margin-top: 0;
     margin-bottom: 0.5em;
     color: #222;
+    text-overflow: ellipsis;
 }
 
 .repo-card p {
