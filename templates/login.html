@@ -1,104 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+{% block extra_css %}
+<link rel="stylesheet" href="../static/css/styles.css">
+{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="message">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repo Intel - Login</title>
-    {% block extra_css %}
-    <link rel="stylesheet" href="../static/css/styles.css">
-    {% endblock %}
-</head>
-
-<body>
-    <div class="container">
-        <div class="auth-container">
-            <div class="auth-header">
-                <h1>Repo Intel</h1>
-                <p>Your Repository Analysis Tool!</p>
-            </div>
-
-            <!-- Login Form -->
-            <div id="login-form" class="auth-form">
-                <h2>Welcome</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="login-username">Username</label>
-                        <input type="text" id="login-username" name="username" required>
-                        <span class="error-message" id="login-username-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" name="password" required>
-                        <span class="error-message" id="login-password-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" id="login-btn">
-                            <span class="btn-text">Login</span>
-                            <span class="btn-spinner hidden">⟳</span>
-                        </button>
-                    </div>
-
-                    <div class="form-footer">
-                        <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Signup Form -->
-            <div id="signup-form" class="auth-form hidden">
-                <h2>Create Account</h2>
-                <form id="signupForm">
-                    <div class="form-group">
-                        <label for="signup-username">Username</label>
-                        <input type="text" id="signup-username" name="username" required maxlength="50">
-                        <small class="form-text">Must be unique, max 50 characters</small>
-                        <span class="error-message" id="signup-username-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="signup-email">Email</label>
-                        <input type="email" id="signup-email" name="email" required maxlength="100">
-                        <span class="error-message" id="signup-email-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="signup-password">Password</label>
-                        <input type="password" id="signup-password" name="password" required minlength="6">
-                        <small class="form-text">Minimum 6 characters</small>
-                        <span class="error-message" id="signup-password-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="signup-confirm-password">Confirm Password</label>
-                        <input type="password" id="signup-confirm-password" name="confirmPassword" required>
-                        <span class="error-message" id="signup-confirm-password-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" id="signup-btn">
-                            <span class="btn-text">Create Account</span>
-                            <span class="btn-spinner hidden">⟳</span>
-                        </button>
-                    </div>
-
-                    <div class="form-footer">
-                        <p>Already have an account? <a href="#" id="show-login">Login</a></p>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Error/Success Messages -->
-            <div id="message-container" class="message-container hidden">
-                <div id="message" class="message"></div>
-            </div>
+<div id="login-form" class="auth-form">
+    <h2>Welcome</h2>
+    <form id="loginForm" method="POST" action="/login">
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" name="username" required>
         </div>
-    </div>
-    {% block extra_js %}
-    <script defer src="../static/js/auth.js"></script>
-    {% endblock %}
-</body>
 
-</html>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="login-btn">
+                <span class="btn-text">Login</span>
+            </button>
+        </div>
+
+        <div class="form-footer">
+            <p>Don't have an account? <a href="/register" id="show-signup">Sign up</a></p>
+        </div>
+    </form>
+</div>
+
+<!-- Optional JS Message Container (unused if server-side flash used) -->
+<div id="message-container" class="message-container hidden">
+    <div id="message" class="message"></div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script defer src="../static/js/auth.js"></script>
+{% endblock %}
