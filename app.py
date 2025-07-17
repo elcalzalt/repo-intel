@@ -3,6 +3,7 @@ from home import *
 
 app = Flask(__name__)
 
+@app.route('/')
 @app.route('/login')
 def login(): #add any needed auth logic here
     return render_template('login.html')
@@ -17,6 +18,10 @@ def search_route():
     query = request.args.get("q", "")
     results = search(query) if query else []
     return render_template('search.html', results=results, query=query)
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
