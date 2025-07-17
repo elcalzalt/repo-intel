@@ -1,319 +1,291 @@
-/* Reset and Base Styles */
-* {
+body {
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    background: #f4f7fa;
+    color: #333;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+header {
+    background: #222831;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
+}
+
+.logo {
+    font-size: 1.5rem;
+}
+
+.logo span {
+    color: #00adb5;
+}
+
+main {
+    max-width: 1000px;
+    margin: 2em auto 4em;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+}
+
+/* User Profile Section */
+.profile {
+    background: #fff;
+    padding: 2em;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* User info layout: avatar + details horizontally */
+.user-info {
     display: flex;
     align-items: center;
+    gap: 2em;
+    margin-bottom: 1.5em;
+}
+
+.user-info img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.user-info > div {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    padding: 20px;
 }
 
-.container {
-    width: 100%;
-    max-width: 450px;
+.user-info h2 {
+    margin: 0 0 0.2em;
+    font-size: 1.8rem;
+    color: #222;
 }
 
-.auth-container {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(96, 19, 19, 0.1);
-    padding: 40px;
-    text-align: center;
-    backdrop-filter: blur(10px);
-}
-
-/* Header Styles */
-.auth-header {
-    margin-bottom: 35px;
-}
-
-.auth-header h1 {
-    color: #333;
-    font-size: 2.2rem;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.auth-header p {
-    color: #666;
-    font-size: 1rem;
-    opacity: 0.8;
-}
-
-/* Form Styles */
-.auth-form {
-    text-align: left;
-}
-
-.auth-form h2 {
-    color: #333;
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 500;
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
+.user-info p {
+    margin: 0.1em 0;
     color: #555;
-    font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background-color: #fafbfc;
+/* Bookmarked repos section */
+.bookmarked-repos {
+    margin-top: 1em;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-    background-color: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.bookmarked-repos h2 {
+    margin-bottom: 1em;
+    color: #00adb5;
+    font-weight: 700;
+    font-size: 1.5rem;
 }
 
-.form-group input.error {
-    border-color: #e74c3c;
-    background-color: #fef5f5;
+/* Bookmark cards container: grid for neat layout */
+.repo-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5em;
 }
 
-.form-group input.success {
-    border-color: #27ae60;
-    background-color: #f0fff4;
-}
-
-.form-text {
-    color: #999;
-    font-size: 0.8rem;
-    margin-top: 5px;
-    display: block;
-}
-
-.error-message {
-    color: #e74c3c;
-    font-size: 0.8rem;
-    margin-top: 5px;
-    display: block;
-    min-height: 18px;
-}
-
-/* Button Styles */
-.btn {
-    width: 100%;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
+/* Bookmark cards */
+.repo-card {
+    background: #fafafa;
+    padding: 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    transition: all 0.3s ease;
+    color: #222;
+}
+
+.repo-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.repo-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.6em;
+    font-size: 1.3rem;
+}
+
+.repo-card p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1em;
+}
+
+.repo-card small {
+    font-weight: 600;
+    color: #00adb5;
+}
+
+/* Search History Section */
+.search-history {
+    margin-top: 2em;
+}
+
+.search-history h2 {
+    margin-bottom: 1em;
+    color: #00adb5;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Search history list */
+.search-history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 600px;
+}
+
+.search-history-list li {
+    background: #fafafa;
+    padding: 1em 1.2em;
+    margin-bottom: 0.8em;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    font-size: 1rem;
+    color: #444;
+    cursor: default;
+    transition: background 0.2s ease;
+}
+
+.search-history-list li:hover {
+    background: #e0f7fa;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1em;
+    background: #222831;
+    color: #fff;
+    margin-top: 3em;
+}
+
+/* Nav */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     position: relative;
+}
+
+nav ul {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #393e46;
+    position: absolute;
+    right: 0;
+    top: 60px;
+    border-radius: 5px;
     overflow: hidden;
+    width: 160px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 150;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-}
-
-.btn-primary:active {
+nav ul.active {
+    max-height: 500px;
+    opacity: 1;
     transform: translateY(0);
 }
 
-.btn-primary:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-.btn-spinner {
-    animation: spin 1s linear infinite;
-    display: inline-block;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Form Footer */
-.form-footer {
-    text-align: center;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.form-footer a {
-    color: #667eea;
+nav li a {
+    color: #fff;
+    padding: 1em;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    display: block;
+    transition: background 0.3s;
 }
 
-.form-footer a:hover {
-    color: #5a6fd8;
-    text-decoration: underline;
+nav li a:hover {
+    background: #00adb5;
 }
 
-/* Message Container */
-.message-container {
-    margin-top: 20px;
-    padding: 15px 20px;
-    border-radius: 8px;
-    text-align: center;
-    animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.message {
-    margin: 0;
-    font-weight: 500;
-}
-
-.message-container.success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-}
-
-.message-container.error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
-
-.message-container.info {
-    background-color: #cce7ff;
-    border: 1px solid #99d3ff;
-    color: #004085;
-}
-
-/* Utility Classes */
-.hidden {
-    display: none;
-}
-
-.text-center {
-    text-align: center;
-}
-
-/* Loading State */
-.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-/* Form Animations */
-.auth-form {
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    .auth-container {
-        padding: 30px 25px;
-    }
-    
-    .auth-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .form-group input {
-        padding: 12px 14px;
-    }
-    
-    .btn {
-        padding: 12px 18px;
-    }
-}
-
-@media (max-width: 320px) {
-    .auth-container {
-        padding: 25px 20px;
-    }
-    
-    .auth-header h1 {
-        font-size: 1.5rem;
-    }
-}
-
-/* Focus Styles for Accessibility */
-.btn:focus,
-input:focus,
-a:focus {
-    outline: 2px solid #667eea;
-    outline-offset: 2px;
-}
-
-/* Custom Checkbox/Radio Styles (if needed later) */
-.form-check {
+.hamburger {
     display: flex;
-    align-items: center;
-    margin: 15px 0;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
 }
 
-.form-check input {
-    width: auto;
-    margin-right: 10px;
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    display: block;
+    border-radius: 2px;
 }
 
-/* Print Styles */
-@media print {
-    .auth-container {
-        box-shadow: none;
-        background: white;
-    }
-    
-    .btn {
-        display: none;
-    }
+/* Dark Mode Styles */
+.dark {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+.dark header, .dark footer {
+    background: #111;
+    color: #fff;
+}
+
+.dark .profile {
+    background: #2a2e35;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    color: #e0e0e0;
+}
+
+.dark .user-info h2 {
+    color: #f0f0f0;
+}
+
+.dark .user-info p {
+    color: #cccccc;
+}
+
+.dark .repo-card {
+    background: #39404a;
+    color: #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.dark .repo-card h3 {
+    color: #f0f0f0;
+}
+
+.dark .repo-card p {
+    color: #cccccc;
+}
+
+.dark .repo-card small {
+    color: #00ffc3;
+}
+
+.dark .search-history-list li {
+    background: #39404a;
+    color: #e0e0e0;
+}
+
+.dark .search-history-list li:hover {
+    background: #3a3a3a;
+}
+
+.dark nav ul {
+    background: #2c2c2c;
 }

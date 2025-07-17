@@ -26,11 +26,19 @@ const mockRepos = [
 mockRepos.forEach(repo => {
     const card = document.createElement('div');
     card.classList.add('repo-card');
+    card.style.cursor = 'pointer'; // Make it clear it's clickable
     card.innerHTML = `
     <h3>${repo.name}</h3>
     <p>${repo.description}</p>
-    <small>⭐ ${repo.stars}</small>
+    <small>⭐ ${repo.stars.toLocaleString()}</small>
   `;
+  
+    // Add click event to redirect to summary page
+    card.addEventListener('click', () => {
+        const repoUrl = `https://github.com/${repo.name.includes('/') ? repo.name : 'microsoft/' + repo.name}`;
+        window.location.href = `summary.html?repo=${encodeURIComponent(repoUrl)}`;
+    });
+    
     repoCards.appendChild(card);
 });
 
@@ -54,8 +62,10 @@ searchInput.addEventListener('input', () => {
     filtered.forEach(repo => {
         const li = document.createElement('li');
         li.textContent = repo.name;
+        li.style.cursor = 'pointer';
         li.onclick = () => {
-            alert(`You selected ${repo.name}`);
+            const repoUrl = `https://github.com/${repo.name.includes('/') ? repo.name : 'microsoft/' + repo.name}`;
+            window.location.href = `summary.html?repo=${encodeURIComponent(repoUrl)}`;
             suggestions.style.display = 'none';
             searchInput.value = repo.name;
         };
