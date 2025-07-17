@@ -57,12 +57,18 @@ def home():
 
 @app.route('/search')
 def search_route():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
     query = request.args.get("q", "")
     results = search(query) if query else []
     return render_template('search.html', results=results, query=query)
 
 @app.route('/profile')
 def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
     return render_template('profile.html')
 
 @app.route('/logout')
