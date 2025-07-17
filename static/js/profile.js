@@ -1,22 +1,6 @@
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
 const userInfoContainer = document.getElementById('userInfo');
 const bookmarksContainer = document.getElementById('bookmarks');
 const searchHistoryList = document.getElementById('searchHistoryList');
-
-// ===== Theme Toggle Logic =====
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark');
-    const isDark = body.classList.contains('dark');
-    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-});
-
-// Apply saved theme
-if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark');
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-}
 
 // ===== Mock User Info =====
 const mockUser = {
@@ -74,12 +58,4 @@ mockSearchHistory.forEach(item => {
     const li = document.createElement('li');
     li.textContent = item;
     searchHistoryList.appendChild(li);
-});
-
-// Hamburger toggle for nav menu
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('nav-links');
-
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
 });
