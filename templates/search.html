@@ -10,10 +10,13 @@
     {% if results %}
     <div class="repo-cards">
         {% for repo in results %}
-        <div class="repo-card" onclick="window.open('{{ repo.url }}', '_blank')"> <!--still change what pressing the button does-->
+        <div class="repo-card" onclick="window.location.href='/repo/{{ repo.name }}'">
             <h3>{{ repo.name }}</h3>
             <p>{{ repo.description }}</p>
             <small>⭐ {{ repo.stars }}</small>
+            <div class="repo-actions">
+                <span class="action-hint">Click to analyze →</span>
+            </div>
         </div>
         {% endfor %}
     </div>

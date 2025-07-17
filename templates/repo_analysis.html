@@ -1,0 +1,261 @@
+{% extends "layout.html" %}
+{% block content %}
+<main>
+    <section class="repo-header">
+        <div class="repo-info">
+            <div class="repo-meta">
+                <h1>{{ repo.name }}</h1>
+                <p class="repo-owner">by {{ repo.owner }}</p>
+                <p class="repo-description">{{ repo.description or "No description available" }}</p>
+                <div class="repo-stats">
+                    <span class="stat">⭐ {{ repo.stars or 0 }}</span>
+                    <span class="stat">🍴 {{ repo.forks or 0 }}</span>
+                    <span class="stat">📝 {{ repo.language or "Unknown" }}</span>
+                    <span class="stat">📅 Updated {{ repo.updated_at or "Unknown" }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="repo-actions">
+        <h2>🔧 Repository Analysis Tools</h2>
+        <div class="action-grid">
+            <div class="action-card" id="summarize-card">
+                <div class="action-icon">📄</div>
+                <h3>Summarize Repository</h3>
+                <p>Get an AI-powered summary of the repository structure, purpose, and key features.</p>
+                <button class="btn btn-primary" onclick="summarizeRepo()">
+                    <span class="btn-text">Generate Summary</span>
+                    <span class="btn-spinner hidden">⟳</span>
+                </button>
+            </div>
+
+            <div class="action-card" id="scan-card">
+                <div class="action-icon">🔍</div>
+                <h3>Scan Files</h3>
+                <p>Analyze code quality, security vulnerabilities, and potential issues in the repository.</p>
+                <button class="btn btn-secondary" onclick="scanRepo()">
+                    <span class="btn-text">Start Scan</span>
+                    <span class="btn-spinner hidden">⟳</span>
+                </button>
+            </div>
+
+            <div class="action-card" id="bookmark-card">
+                <div class="action-icon">🔖</div>
+                <h3>Bookmark Repository</h3>
+                <p>Save this repository to your profile for quick access later.</p>
+                <button class="btn btn-accent" onclick="bookmarkRepo()" id="bookmark-btn">
+                    <span class="btn-text">Add Bookmark</span>
+                    <span class="btn-spinner hidden">⟳</span>
+                </button>
+            </div>
+
+            <div class="action-card" id="github-card">
+                <div class="action-icon">🌐</div>
+                <h3>View on GitHub</h3>
+                <p>Open the original repository on GitHub to browse code and contribute.</p>
+                <button class="btn btn-outline" onclick="viewOnGitHub()">
+                    Open on GitHub
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section hidden" id="results-section">
+        <h2>📊 Analysis Results</h2>
+        <div class="results-container">
+            <div id="summary-results" class="result-panel hidden">
+                <h3>📄 Repository Summary</h3>
+                <div class="summary-content" id="summary-content">
+                    <!-- Summary content will be loaded here -->
+                </div>
+            </div>
+
+            <div id="scan-results" class="result-panel hidden">
+                <h3>🔍 Scan Results</h3>
+                <div class="scan-content" id="scan-content">
+                    <!-- Scan results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Search -->
+    <section class="navigation">
+        <a href="/home" class="btn btn-outline">← Back to Search</a>
+    </section>
+</main>
+
+<script>
+    // Repository data from Flask
+    const repoData = {
+        name: "{{ repo.name }}",
+        owner: "{{ repo.owner }}",
+        url: "{{ repo.url }}",
+        full_name: "{{ repo.full_name or (repo.owner + '/' + repo.name) }}"
+    };
+
+    async function summarizeRepo() {
+        const button = document.querySelector('#summarize-card button');
+        setButtonLoading(button, true);
+        
+        try {
+            const response = await fetch('/api/summarize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    repo_url: repoData.url,
+                    repo_name: repoData.full_name
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                showResults('summary', result.summary);
+            } else {
+                alert('Failed to generate summary: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error generating summary. Please try again.');
+            console.error('Summary error:', error);
+        } finally {
+            setButtonLoading(button, false);
+        }
+    }
+
+    async function scanRepo() {
+        const button = document.querySelector('#scan-card button');
+        setButtonLoading(button, true);
+        
+        try {
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    repo_url: repoData.url,
+                    repo_name: repoData.full_name
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                showResults('scan', result.scan_results);
+            } else {
+                alert('Failed to scan repository: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error scanning repository. Please try again.');
+            console.error('Scan error:', error);
+        } finally {
+            setButtonLoading(button, false);
+        }
+    }
+
+    async function bookmarkRepo() {
+        const button = document.getElementById('bookmark-btn');
+        setButtonLoading(button, true);
+        
+        try {
+            const response = await fetch('/api/bookmark', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    repo_url: repoData.url,
+                    repo_name: repoData.full_name,
+                    repo_owner: repoData.owner
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                button.querySelector('.btn-text').textContent = '✓ Bookmarked';
+                button.classList.add('bookmarked');
+                button.disabled = true;
+            } else {
+                alert('Failed to bookmark repository: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error bookmarking repository. Please try again.');
+            console.error('Bookmark error:', error);
+        } finally {
+            setButtonLoading(button, false);
+        }
+    }
+
+    function viewOnGitHub() {
+        window.open(repoData.url, '_blank');
+    }
+
+    function showResults(type, content) {
+        const resultsSection = document.getElementById('results-section');
+        const resultPanel = document.getElementById(type + '-results');
+        const contentDiv = document.getElementById(type + '-content');
+        
+        // Hide other result panels
+        document.querySelectorAll('.result-panel').forEach(panel => {
+            panel.classList.add('hidden');
+        });
+        
+        // Show the requested panel
+        resultsSection.classList.remove('hidden');
+        resultPanel.classList.remove('hidden');
+        
+        if (type === 'summary') {
+            contentDiv.innerHTML = `<div class="summary-text">${content}</div>`;
+        } else if (type === 'scan') {
+            contentDiv.innerHTML = formatScanResults(content);
+        }
+        
+        // Scroll to results
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function formatScanResults(results) {
+        // Format scan results into readable HTML
+        let html = '<div class="scan-results">';
+        
+        if (results.issues && results.issues.length > 0) {
+            html += '<h4>🚨 Issues Found:</h4><ul>';
+            results.issues.forEach(issue => {
+                html += `<li class="issue-${issue.severity}">${issue.message}</li>`;
+            });
+            html += '</ul>';
+        } else {
+            html += '<p class="no-issues">✅ No critical issues found!</p>';
+        }
+        
+        if (results.security_warnings && results.security_warnings.length > 0) {
+            html += '<h4>🔒 Security Warnings:</h4><ul>';
+            results.security_warnings.forEach(warning => {
+                html += `<li class="security-warning">${warning}</li>`;
+            });
+            html += '</ul>';
+        }
+        
+        html += '</div>';
+        return html;
+    }
+
+    function setButtonLoading(button, isLoading) {
+        if (isLoading) {
+            button.disabled = true;
+            button.querySelector('.btn-text').classList.add('hidden');
+            button.querySelector('.btn-spinner').classList.remove('hidden');
+        } else {
+            button.disabled = false;
+            button.querySelector('.btn-text').classList.remove('hidden');
+            button.querySelector('.btn-spinner').classList.add('hidden');
+        }
+    }
+</script>
+{% endblock content %}
