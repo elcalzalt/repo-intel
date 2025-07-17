@@ -26,7 +26,7 @@ const mockUser = {
 };
 
 userInfoContainer.innerHTML = `
-    <h2>@${mockUser.username}</h2>
+    <h3>@${mockUser.username}</h3>
     <p>${mockUser.bio}</p>
     <small>Joined: ${mockUser.joined}</small>
 `;

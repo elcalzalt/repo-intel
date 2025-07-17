@@ -234,6 +234,19 @@ nav li a:hover {
     border-radius: 2px;
 }
 
+/* Smaller username style */
+.username {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 4px;
+    display: block;
+}
+
+.dark .username {
+    color: #ccc;
+}
+
+
 /* Dark Mode Styles */
 .dark {
     background: #1a1a1a;
