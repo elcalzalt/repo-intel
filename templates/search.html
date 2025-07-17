@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<main>
+    <form action="/search" method="get" class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..."
+            value="{{ query }}" />
+    </form>
+
+    {% if results %}
+    <div class="repo-cards">
+        {% for repo in results %}
+        <div class="repo-card" onclick="window.open('{{ repo.url }}', '_blank')"> <!--still change what pressing the button does-->
+            <h3>{{ repo.name }}</h3>
+            <p>{{ repo.description }}</p>
+            <small>⭐ {{ repo.stars }}</small>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No results found.</p>
+    {% endif %}
+</main>
+{% endblock content %}

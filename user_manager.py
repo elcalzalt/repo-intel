@@ -40,11 +40,7 @@ class UserManager:
             "bookmarks", self.metadata,
             db.Column("id", db.Integer, primary_key=True, autoincrement=True),
             db.Column("user_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
-            db.Column("bookmark_type", db.String(20), nullable=False),
             db.Column("repo_name", db.String(100), nullable=False),
-            db.Column("file_path", db.String(200)),
-            db.Column("title", db.String(200)),
-            db.Column("notes", db.String(1000)),
             db.Column("created_at", db.DateTime, default=db.func.now())
         )
 
@@ -157,8 +153,7 @@ class UserManager:
         except Exception:
             return []
 
-    def add_bookmark(self, bookmark_type: str, repo_name: str, file_path: str = None, 
-                    title: str = None, notes: str = None) -> bool:
+    def add_bookmark(self, repo_name: str) -> bool:
         """Add a bookmark for the user"""
         if not self.is_logged_in():
             return False
@@ -166,8 +161,7 @@ class UserManager:
         try:
             query = db.select(self.bookmarks).where(
                 (self.bookmarks.c.user_id == self.current_user_id) &
-                (self.bookmarks.c.repo_name == repo_name) &
-                (self.bookmarks.c.file_path == file_path)
+                (self.bookmarks.c.repo_name == repo_name)
             )
             existing = self.connection.execute(query).fetchone()
             
@@ -176,11 +170,7 @@ class UserManager:
             
             self.connection.execute(self.bookmarks.insert(), {
                 'user_id': self.current_user_id,
-                'bookmark_type': bookmark_type,
-                'repo_name': repo_name,
-                'file_path': file_path,
-                'title': title or (f"{repo_name}/{file_path}" if file_path else repo_name),
-                'notes': notes
+                'repo_name': repo_name
             })
             return True
         except Exception:

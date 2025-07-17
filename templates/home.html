@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+<main>
+    <section class="hero">
+        <h1>Discover, Analyze, and Contribute</h1>
+        <p>Find top GitHub repositories tailored to your interests.</p>
+
+        <div class="search-wrapper">
+            <form action="/search" method="get" class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..." value="{{ query }}"/>
+            </form>
+            <ul id="suggestions"></ul>
+            <div class="categories">
+                <span>🌐 Web Dev</span>
+                <span>🧠 AI</span>
+                <span>📱 Mobile</span>
+                <span>🧪 Data Science</span>
+                <span>🔒 Security</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="popular-repos">
+        <h2>🔥 Top Active Repositories</h2>
+        <div class="carousel-container">
+            <div class="repo-cards" id="repoCards">
+                {% for repo in repos %}
+                <div class="repo-card" onclick="window.open('{{ repo.url }}', '_blank')">
+                    <!-- change the action this does -->
+                    <h3>{{ repo.name }}</h3>
+                    <p>{{ repo.description }}</p>
+                    <small>⭐ {{ repo.stars }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <h2>🔍 How It Works</h2>
+        <div class="steps">
+            <div>
+                <h3>1. Search</h3>
+                <p>Use natural language or categories to find relevant repositories.</p>
+            </div>
+            <div>
+                <h3>2. Analyze</h3>
+                <p>Get summarized insights and scan for issues or security warnings.</p>
+            </div>
+            <div>
+                <h3>3. Bookmark</h3>
+                <p>Save your favorites and revisit them anytime on your profile.</p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}
