@@ -28,7 +28,7 @@
         <div class="carousel-container">
             <div class="repo-cards" id="repoCards">
                 {% for repo in repos %}
-                <div class="repo-card" onclick="window.open('{{ repo.url }}', '_blank')">
+                <div class="repo-card" onclick="window.location.href='/repo/{{ repo.name }}'">
                     <h3>{{ repo.name }}</h3>
                     <p>{{ repo.description }}</p>
                     <small>⭐ {{ repo.stars }}</small>
