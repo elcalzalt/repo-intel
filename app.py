@@ -78,7 +78,7 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
-app.route('/repo/<path:repo_name>')
+@app.route('/repo/<path:repo_name>')
 def repo_analysis(repo_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))

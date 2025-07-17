@@ -20,7 +20,8 @@ def getTrendy():
     data = response.json()
     return [
         {
-            "name": repo["name"],
+            # Use full_name as the `name` key so templates can treat repo.name uniformly
+            "name": repo["full_name"],
             "stars": repo["stargazers_count"],
             "description": repo["description"] or "",
             "url": repo["html_url"]
