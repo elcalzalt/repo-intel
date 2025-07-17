@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from home import getTrendy
+from flask import Flask, render_template, request
+from home import *
 
 app = Flask(__name__)
 
@@ -7,6 +7,12 @@ app = Flask(__name__)
 def home():
     repos = getTrendy()
     return render_template('home.html', repos=repos)
+
+@app.route('/search')
+def search_route():
+    query = request.args.get("q", "")
+    results = search(query) if query else []
+    return render_template('search.html', results=results, query=query)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
