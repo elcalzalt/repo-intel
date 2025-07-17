@@ -1,16 +1,31 @@
-{% block extra_css %}
-<link rel="stylesheet" href="../static/css/styles.css">
-{% endblock %}
-{% block content %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class="flash-messages">
-    {% for message in messages %}
-    <div class="message">{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
-{% endwith %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repo Intel | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Repo <span>Intel</span></h1>
+                <p>Your Repository Analysis Tool!</p>
+            </div>
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="message">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
 
 <div id="login-form" class="auth-form">
     <h2>Welcome</h2>
@@ -28,22 +43,23 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary" id="login-btn">
                 <span class="btn-text">Login</span>
+                <span class="btn-spinner hidden">⟳</span>
             </button>
         </div>
 
         <div class="form-footer">
-            <p>Don't have an account? <a href="/register" id="show-signup">Sign up</a></p>
+            <p>Don't have an account? <a href="/register">Sign up</a></p>
         </div>
     </form>
 </div>
 
-<!-- Optional JS Message Container (unused if server-side flash used) -->
-<div id="message-container" class="message-container hidden">
-    <div id="message" class="message"></div>
-</div>
-</div>
-</div>
-{% endblock %}
-{% block extra_js %}
-<script defer src="../static/js/auth.js"></script>
-{% endblock %}
+            <!-- End of Login Form -->
+            <div id="message-container" class="message-container hidden">
+                <div id="message" class="message"></div>
+            </div>
+        </div>
+    </div>
+    <script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>
