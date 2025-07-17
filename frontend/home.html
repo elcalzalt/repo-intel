@@ -26,9 +26,9 @@
         </div>
         <nav>
             <ul id="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#profile">Profile</a></li>
-                <li><a href="#login">Login</a></li>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="login.html">Login</a></li>
             </ul>
         </nav>
     </div>
@@ -47,22 +47,22 @@
                         id="searchInput"
                         placeholder="Search for repositories, topics..."
                 />
+                </div>
+                <ul id="suggestions"></ul> <!-- moved inside search-box -->
             </div>
-            <ul id="suggestions"></ul>
-            <div class="categories">
-                <span>🌐 Web Dev</span>
-                <span>🧠 AI</span>
-                <span>📱 Mobile</span>
-                <span>🧪 Data Science</span>
-                <span>🔒 Security</span>
-            </div>
+
+        <div class="categories">
+            <span>🌐 Web Dev</span>
+            <span>🧠 AI</span>
+            <span>📱 Mobile</span>
+            <span>🧪 Data Science</span>
+            <span>🔒 Security</span>
         </div>
     </section>
 
     <section class="popular-repos">
         <h2>🔥 Top Active Repositories</h2>
         <div class="carousel-container">
-            <!-- Removed carousel buttons -->
             <div class="repo-cards" id="repoCards"></div>
         </div>
     </section>
