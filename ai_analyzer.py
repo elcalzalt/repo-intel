@@ -1,9 +1,11 @@
 from google import genai
 from google.genai import types
+import os
 
 class AIAnalyzer:
     def __init__(self, key: str):
         self.client = genai.Client(api_key='AIzaSyDg0zwD9K4PD8vBgoFIUHARYOrG7Q2VlT8')
+        self.base_dir = os.path.dirname(__file__)
 
     def commit_str(self, commit):
         commit_message = commit[0]
@@ -40,8 +42,10 @@ class AIAnalyzer:
         latest_commit = repo_data[3]
         open_issues = repo_data[4]
 
-        system_instruction_file = open("summary_instruction.txt", "rt")
-        system_instruction_contents = system_instruction_file.read()
+
+        instr_path = os.path.join(self.base_dir, 'summary_instruction.txt')
+        with open(instr_path, 'rt') as system_instruction_file:
+            system_instruction_contents = system_instruction_file.read()
         system_instruction_file.close()
         summary = self.client.models.generate_content(
             model="gemini-2.5-flash",
@@ -58,8 +62,9 @@ latest five open issues:\n" + self.issues_str(open_issues) + "\n",
         return summary.text
 
     def scan_file(self, file_path, contents):
-        system_instruction_file = open("scan_instruction.txt", "rt")
-        system_instruction_contents = system_instruction_file.read()
+        instr_path = os.path.join(self.base_dir, 'scan_instruction.txt')
+        with open(instr_path, 'rt') as system_instruction_file:
+            system_instruction_contents = system_instruction_file.read()
         system_instruction_file.close()
 
         response = self.client.models.generate_content(
