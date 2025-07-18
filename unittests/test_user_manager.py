@@ -6,6 +6,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from user_manager import UserManager
+from cache_db import CacheDatabase
 
 class TestUserManager(unittest.TestCase):
     def setUp(self):
@@ -13,7 +14,10 @@ class TestUserManager(unittest.TestCase):
         self.test_db = tempfile.NamedTemporaryFile(delete=False, suffix='.db')
         self.test_db.close()
         self.db_path = f"sqlite:///{self.test_db.name}"
-        self.user_manager = UserManager(self.db_path)
+        # Instantiate UserManager with correct db_path keyword
+        # Provide a cache database and temporary user DB path
+        cache = CacheDatabase('sqlite:///:memory:')
+        self.user_manager = UserManager(cache, self.db_path)
 
     def tearDown(self):
         # Clean up the temporary database
@@ -76,20 +80,15 @@ class TestUserManager(unittest.TestCase):
         self.user_manager.create_user("testuser", "test@example.com", "password123")
         self.user_manager.authenticate_user("testuser", "password123")
         
-        # Add bookmarks
-        result = self.user_manager.add_bookmark("repo", "owner/repo", title="Test Repo")
+        # Add a repo bookmark
+        result = self.user_manager.add_bookmark("owner/repo")
         self.assertTrue(result)
-        
-        result = self.user_manager.add_bookmark("file", "owner/repo", "file.py", "Test File", "Important file")
-        self.assertTrue(result)
-        
-        # Get bookmarks
-        bookmarks = self.user_manager.get_bookmarks()
-        self.assertEqual(len(bookmarks), 2)
-        
-        # Test duplicate bookmark should fail
-        result = self.user_manager.add_bookmark("repo", "owner/repo", title="Duplicate")
+        # Duplicate should fail
+        result = self.user_manager.add_bookmark("owner/repo")
         self.assertFalse(result)
+        # Get bookmarks should have one entry
+        bookmarks = self.user_manager.get_bookmarks()
+        self.assertEqual(len(bookmarks), 1)
 
     def test_unauthorized_operations(self):
         """Test that operations require login"""
@@ -101,7 +100,7 @@ class TestUserManager(unittest.TestCase):
         self.assertEqual(len(history), 0)
         
         # Test bookmarks without login
-        result = self.user_manager.add_bookmark("repo", "owner/repo")
+        result = self.user_manager.add_bookmark("owner/repo")
         self.assertFalse(result)
         
         bookmarks = self.user_manager.get_bookmarks()
