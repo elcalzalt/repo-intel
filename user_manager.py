@@ -291,6 +291,7 @@ class UserManager:
             self.add_to_search_history('Summary', repo)
 
         return summary
+    
     def scan_file(self, repo, file_path):
         updated_at = self.gh.get_update_date(repo)
 
