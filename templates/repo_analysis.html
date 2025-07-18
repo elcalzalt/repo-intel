@@ -53,6 +53,10 @@
                     <input type="hidden" name="repo_name" value="{{ repo.full_name }}">
                     <input type="hidden" name="repo_owner" value="{{ repo.owner }}">
                     <input type="hidden" name="repo_url" value="{{ repo.url }}">
+                    <input type="hidden" name="description" value="{{ repo.description }}">
+                    <input type="hidden" name="stars" value="{{ repo.stars }}">
+                    <input type="hidden" name="forks" value="{{ repo.forks }}">
+                    <input type="hidden" name="updated_at" value="{{ repo.updated_at }}">
                     {% if matched_bookmark %}
                     <input type="hidden" name="bookmark_id" value="{{ matched_bookmark.id }}">
                     <button class="btn btn-accent bookmarked" disabled>✓ Bookmarked</button>

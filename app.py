@@ -88,20 +88,33 @@ def logout():
 def repo_analysis(repo_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
-    # Use full repo info from form
-    full_name = request.form.get('full_name', repo_name)
-    owner = request.form.get('owner', full_name.split('/', 1)[0])
-    name = request.form.get('name', full_name.split('/', 1)[1] if '/' in full_name else full_name)
-    description = request.form.get('description', '')
-    url = request.form.get('url', '')
-    stars = request.form.get('stars', '')
-    forks = request.form.get('forks', '')
-    updated_at = request.form.get('updated_at', '')
+    # Determine data source: POST from search or GET with query params after bookmark toggle
+    data = request.form if request.method == 'POST' else request.args
+    full_name = data.get('full_name', repo_name)
+    owner = data.get('owner', full_name.split('/', 1)[0])
+    name = data.get('name', full_name.split('/', 1)[1] if '/' in full_name else full_name)
+    description = data.get('description', '')
+    url = data.get('url', '')
+    stars = data.get('stars', '')
+    forks = data.get('forks', '')
+    updated_at = data.get('updated_at', '')
 
     user_manager.add_to_search_history(search_type='Click', repo_name=full_name)
 
     # Build repo_data
+    # If metadata missing (e.g., via profile bookmark), fetch from GitHub API
+    if not (description and stars and forks and updated_at):
+        try:
+            import requests
+            resp = requests.get(f"https://api.github.com/repos/{full_name}")
+            if resp.status_code == 200:
+                repo_json = resp.json()
+                description = description or repo_json.get('description', '')
+                stars = stars or repo_json.get('stargazers_count', '')
+                forks = forks or repo_json.get('forks_count', '')
+                updated_at = updated_at or repo_json.get('updated_at', '')
+        except Exception as e:
+            print(f"Error fetching metadata: {e}")
     repo_data = {
         'name': name,
         'owner': owner,
@@ -197,7 +210,31 @@ def toggle_bookmark():
         if bookmark_id and bookmark_id.isdigit():
             user_manager.remove_bookmark(int(bookmark_id))
 
-    return redirect(request.referrer or url_for('home'))
+    # After toggling, redirect back to repo_analysis with full metadata to preserve display
+    form = request.form
+    full_name = form.get('repo_name', '') or ''
+    owner = form.get('repo_owner', '') or ''
+    # derive simple name from full_name
+    if full_name and '/' in full_name:
+        name = full_name.split('/', 1)[1]
+    else:
+        name = full_name
+    description = form.get('description', '') or ''
+    repo_url = form.get('repo_url', '') or ''
+    stars = form.get('stars', '') or ''
+    forks = form.get('forks', '') or ''
+    updated_at = form.get('updated_at', '') or ''
+    # Redirect back to repo_analysis with metadata as query params
+    return redirect(url_for('repo_analysis',
+                             repo_name=full_name,
+                             full_name=full_name,
+                             owner=owner,
+                             name=name,
+                             description=description,
+                             url=repo_url,
+                             stars=stars,
+                             forks=forks,
+                             updated_at=updated_at))
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8080)
