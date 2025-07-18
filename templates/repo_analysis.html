@@ -77,7 +77,8 @@
             </div>
 
             <div id="scan-results" class="result-panel hidden">
-                <h3>🔍 Scan Results</h3>
+                <h3>🔍 Scan Files</h3>
+                <div id="file-tree" class="file-tree"></div>
                 <div class="scan-content" id="scan-content">
                     <!-- Scan results will be loaded here -->
                 </div>
@@ -99,6 +100,68 @@
         url: "{{ repo.url }}",
         full_name: "{{ repo.full_name or (repo.owner + '/' + repo.name) }}"
     };
+
+    // Display file tree in UI
+    function showFileTree(tree, currentPath) {
+        const treeContainer = document.getElementById('file-tree');
+        treeContainer.innerHTML = '';
+        const ul = document.createElement('ul');
+        tree.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.name;
+            li.classList.add(item.type === 'dir' ? 'directory' : 'file');
+            li.addEventListener('click', () => {
+                const path = item.path;
+                if (item.type === 'dir') {
+                    loadDirectory(path);
+                } else {
+                    initiateScan(path);
+                }
+            });
+            ul.appendChild(li);
+        });
+        treeContainer.appendChild(ul);
+        // show the panel
+        showResults('scan', null, true);
+    }
+
+    // Fetch directory contents
+    async function loadDirectory(path) {
+        try {
+            const response = await fetch('/api/file-tree', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_name: repoData.full_name, file_path: path })
+            });
+            const result = await response.json();
+            if (result.success) {
+                showFileTree(result.file_tree, path);
+            } else {
+                alert('Failed to load directory');
+            }
+        } catch (error) {
+            console.error('Directory load error:', error);
+        }
+    }
+
+    // Initiate file scan
+    async function initiateScan(filePath) {
+        try {
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_name: repoData.full_name, file_path: filePath })
+            });
+            const result = await response.json();
+            if (result.success) {
+                showResults('scan', result.scan_results);
+            } else {
+                alert('Scan failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Scan error:', error);
+        }
+    }
 
     async function summarizeRepo() {
         const button = document.querySelector('#summarize-card button');
@@ -134,29 +197,21 @@
     async function scanRepo() {
         const button = document.querySelector('#scan-card button');
         setButtonLoading(button, true);
-        
         try {
-            const response = await fetch('/api/scan', {
+            const response = await fetch('/api/file-tree', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    repo_url: repoData.url,
-                    repo_name: repoData.full_name
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_name: repoData.full_name })
             });
-
             const result = await response.json();
-            
             if (result.success) {
-                showResults('scan', result.scan_results);
+                showFileTree(result.file_tree, '');
             } else {
-                alert('Failed to scan repository: ' + result.message);
+                alert('Failed to load file tree');
             }
         } catch (error) {
-            alert('Error scanning repository. Please try again.');
-            console.error('Scan error:', error);
+            alert('Error loading file tree.');
+            console.error('File tree error:', error);
         } finally {
             setButtonLoading(button, false);
         }
@@ -200,7 +255,7 @@
         window.open(repoData.url, '_blank');
     }
 
-    function showResults(type, content) {
+    function showResults(type, content, skipPanel) {
         const resultsSection = document.getElementById('results-section');
         const resultPanel = document.getElementById(type + '-results');
         const contentDiv = document.getElementById(type + '-content');
@@ -217,37 +272,12 @@
         if (type === 'summary') {
             contentDiv.innerHTML = `<div class="summary-text">${content}</div>`;
         } else if (type === 'scan') {
-            contentDiv.innerHTML = formatScanResults(content);
+            // Display pre-formatted scan message
+            contentDiv.innerHTML = content;
         }
         
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function formatScanResults(results) {
-        // Format scan results into readable HTML
-        let html = '<div class="scan-results">';
-        
-        if (results.issues && results.issues.length > 0) {
-            html += '<h4>🚨 Issues Found:</h4><ul>';
-            results.issues.forEach(issue => {
-                html += `<li class="issue-${issue.severity}">${issue.message}</li>`;
-            });
-            html += '</ul>';
-        } else {
-            html += '<p class="no-issues">✅ No critical issues found!</p>';
-        }
-        
-        if (results.security_warnings && results.security_warnings.length > 0) {
-            html += '<h4>🔒 Security Warnings:</h4><ul>';
-            results.security_warnings.forEach(warning => {
-                html += `<li class="security-warning">${warning}</li>`;
-            });
-            html += '</ul>';
-        }
-        
-        html += '</div>';
-        return html;
     }
 
     function setButtonLoading(button, isLoading) {

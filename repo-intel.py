@@ -56,38 +56,6 @@ class RepoIntelClient:
     def get_file_tree(self, repo, path=""):
         return self.gh.get_directory(repo, path)
 
-    def scan_file(self, repo, file_path):
-        updated_at = self.gh.get_update_date(repo)
-
-        if type(updated_at) is int:
-            return updated_at
-        
-        cache = self.db.get_recent_cache(repo, self.db.vulnerability_cache, updated_at, file_path)
-        report = cache[0]
-        if cache[2] is False:
-
-            contents = self.gh.get_file_contents(repo, file_path)
-
-            if type(contents) is int:
-                return contents
-
-            report = self.ai.scan_file(file_path, contents)
-
-            if cache[1]:
-                self.db.delete_entry(repo, self.db.vulnerability_cache, file_path)
-
-            self.db.insert_data(self.db.vulnerability_cache, {
-                'repo_name': repo,
-                'file_name': file_path,
-                'response': report,
-                'updated_at': updated_at
-            })
-
-        if self.user_manager.is_logged_in():
-            self.user_manager.add_to_search_history('Scan', repo, file_path)
-
-        return report
-
     def login(self, username, password):
         if self.user_manager.authenticate_user(username, password):
             return True

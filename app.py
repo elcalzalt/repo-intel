@@ -126,26 +126,33 @@ def api_summarize():
         'summary': summary
     })
 
+@app.route('/api/file-tree', methods=['POST'])
+def api_file_tree():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    data = request.get_json()
+    repo_name = data.get('repo_name')
+    # default to root if no path provided
+    file_path = data.get('file_path', '')
+    # fetch directory listing
+    file_tree = user_manager.get_file_tree(repo_name, file_path)
+    return jsonify({
+        'success': True,
+        'file_tree': file_tree
+    })
+
 @app.route('/api/scan', methods=['POST'])
 def api_scan():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     data = request.get_json()
-    repo_url = data.get('repo_url')
     repo_name = data.get('repo_name')
+    file_path = data.get('file_path')
     
     # Mock scan results - replace with actual security scanning
-    scan_results = {
-        'issues': [
-            {'severity': 'low', 'message': 'Consider adding more comprehensive error handling'},
-            {'severity': 'medium', 'message': 'Some dependencies may have newer versions available'}
-        ],
-        'security_warnings': [
-            'No critical security vulnerabilities detected',
-            'All dependencies appear to be up to date'
-        ]
-    }
+    scan_results = user_manager.scan_file(repo_name, file_path)
     
     return jsonify({
         'success': True,
