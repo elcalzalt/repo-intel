@@ -3,7 +3,7 @@ from google.genai import types
 
 class AIAnalyzer:
     def __init__(self, key: str):
-        self.client = genai.Client(api_key=key)
+        self.client = genai.Client(api_key='AIzaSyDg0zwD9K4PD8vBgoFIUHARYOrG7Q2VlT8')
 
     def commit_str(self, commit):
         commit_message = commit[0]
