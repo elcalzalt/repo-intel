@@ -197,6 +197,8 @@
     async function scanRepo() {
         const button = document.querySelector('#scan-card button');
         setButtonLoading(button, true);
+        // clear any prior scan content and show tree on new scan
+        document.getElementById('scan-content').innerHTML = '';
         try {
             const response = await fetch('/api/file-tree', {
                 method: 'POST',
@@ -255,10 +257,22 @@
         window.open(repoData.url, '_blank');
     }
 
-    function showResults(type, content, skipPanel) {
+    function showResults(type, content) {
         const resultsSection = document.getElementById('results-section');
         const resultPanel = document.getElementById(type + '-results');
         const contentDiv = document.getElementById(type + '-content');
+        // For scans, toggle file tree visibility
+        if (type === 'scan') {
+            const treeEl = document.getElementById('file-tree');
+            if (content) {
+                // hide tree when showing scan results
+                treeEl.classList.add('hidden');
+            } else {
+                // show tree and clear previous results
+                treeEl.classList.remove('hidden');
+                contentDiv.innerHTML = '';
+            }
+        }
         
         // Hide other result panels
         document.querySelectorAll('.result-panel').forEach(panel => {

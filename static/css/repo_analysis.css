@@ -274,6 +274,34 @@
     margin-top: 2em;
 }
 
+/* File Tree Styles */
+.file-tree {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+  padding: 1em;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.file-tree ul {
+  list-style: none;
+  padding-left: 1em;
+  margin: 0;
+}
+.file-tree li.directory {
+  font-weight: bold;
+  cursor: pointer;
+  color: #00adb5;
+}
+.file-tree li.file {
+  cursor: pointer;
+  color: #333333;
+}
+.file-tree li:hover {
+  background: #e0f7fa;
+}
+
 /* Utility Classes */
 .hidden {
     display: none;
