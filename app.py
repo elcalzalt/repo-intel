@@ -71,7 +71,11 @@ def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    return render_template('profile.html')
+    user_info = user_manager.get_user_info()
+    history = user_manager.get_search_history()
+    bookmarks = user_manager.get_bookmarks()
+
+    return render_template('profile.html', user=user_info, history=history, bookmarks=bookmarks)
 
 @app.route('/logout')
 def logout():
@@ -95,6 +99,8 @@ def repo_analysis(repo_name):
     forks = request.form.get('forks', '')
     updated_at = request.form.get('updated_at', '')
 
+    user_manager.add_to_search_history(search_type='Click', repo_name=full_name)
+
     # Build repo_data
     repo_data = {
         'name': name,
@@ -106,8 +112,9 @@ def repo_analysis(repo_name):
         'forks': forks,
         'updated_at': updated_at
     }
-    
-    return render_template('repo_analysis.html', repo=repo_data)
+
+    bookmarks = user_manager.get_bookmarks()
+    return render_template('repo_analysis.html', repo=repo_data, bookmarks=bookmarks)
 
 # API Routes for repository analysis
 @app.route('/api/summarize', methods=['POST'])
@@ -165,9 +172,7 @@ def api_bookmark():
         return redirect(url_for('login'))
     
     data = request.get_json()
-    repo_url = data.get('repo_url')
     repo_name = data.get('repo_name')
-    repo_owner = data.get('repo_owner')
     
     # Mock bookmark save - replace with actual database storage
     # In real implementation, save to user's bookmarks in database
@@ -176,6 +181,23 @@ def api_bookmark():
         'success': True,
         'message': f'Repository {repo_name} has been bookmarked successfully'
     })
+
+@app.route('/toggle_bookmark', methods=['POST'])
+def toggle_bookmark():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    action = request.form['action']
+    
+    if action == 'add':
+        repo_name = request.form['repo_name']
+        user_manager.add_bookmark(repo_name)
+    elif action == 'remove':
+        bookmark_id = request.form.get('bookmark_id')
+        if bookmark_id and bookmark_id.isdigit():
+            user_manager.remove_bookmark(int(bookmark_id))
+
+    return redirect(request.referrer or url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8080)

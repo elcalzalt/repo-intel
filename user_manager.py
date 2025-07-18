@@ -291,7 +291,6 @@ class UserManager:
             self.add_to_search_history('Summary', repo)
 
         return summary
-    
     def scan_file(self, repo, file_path):
         updated_at = self.gh.get_update_date(repo)
 
@@ -326,3 +325,23 @@ class UserManager:
     
     def get_file_tree(self, repo, path=""):
         return self.gh.get_directory(repo, path)
+    
+    def get_user_info(self) -> Optional[dict]:
+        if not self.is_logged_in():
+            return None
+        try:
+            with self.engine.begin() as conn:
+                query = db.select(self.users).where(self.users.c.id == self.current_user_id)
+                user = conn.execute(query).fetchone()
+                if user:
+                    return {
+                        'id': user[0],
+                        'username': user[1],
+                        'email': user[2],
+                        'created_at': user[5],
+                        'last_login': user[6]
+                    }
+        except Exception as e:
+            print(f"Error fetching user info: {e}")
+        
+        return None
