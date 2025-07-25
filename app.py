@@ -114,7 +114,6 @@ def repo_analysis(repo_name):
                 stars = stars or repo_json.get('stargazers_count', '')
                 forks = forks or repo_json.get('forks_count', '')
                 updated_at = updated_at or repo_json.get('updated_at', '')
-                updated_at = time_ago(updated_at)
         except Exception as e:
             print(f"Error fetching metadata: {e}")
     repo_data = {
@@ -125,7 +124,7 @@ def repo_analysis(repo_name):
         'url': url,
         'stars': stars,
         'forks': forks,
-        'updated_at': updated_at
+        'updated_at': time_ago(updated_at)
     }
 
     bookmarks = user_manager.get_bookmarks()
