@@ -1,3 +1,6 @@
+"""Flask application for repository analysis and user management.
+Provides routes for authentication, repository operations, summarization,
+file structure browsing, scanning, exporting results, and bookmarks."""
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from home import *
 from user_manager import UserManager
@@ -8,12 +11,14 @@ import subprocess, tempfile, os
 from flask import send_file, make_response
 
 app = Flask(__name__)
+# Set secret key for session management
 app.secret_key = 'super-secret-key'
 
 cache = CacheDatabase()
 user_manager = UserManager(cache)
 
 @app.route('/login', methods=['GET', 'POST'])
+# Route for user login; GET displays form, POST processes credentials
 def login():
     if request.method == 'POST':
         username = request.form.get("username")
@@ -29,6 +34,7 @@ def login():
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
+# Route for new user registration; validates and adds user to database
 def register():
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
@@ -51,6 +57,7 @@ def register():
 
 @app.route('/')
 @app.route('/home')
+# Home page; shows trending repositories after authentication
 def home():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -62,6 +69,7 @@ def home():
     return render_template('home.html', repos=repos)
 
 @app.route('/search')
+# Search route; handles repository search queries
 def search_route():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -71,6 +79,7 @@ def search_route():
     return render_template('search.html', results=results, query=query)
 
 @app.route('/profile')
+# User profile; displays user info, search history, and bookmarks
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -82,6 +91,7 @@ def profile():
     return render_template('profile.html', user=user_info, history=history, bookmarks=bookmarks)
 
 @app.route('/logout')
+# Logout route; clears session and redirects to login
 def logout():
     user_manager.logout()
     session.clear()
@@ -89,6 +99,7 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/repo/<path:repo_name>', methods=['GET', 'POST'])
+# Repository analysis page; shows metadata and allows bookmarking
 def repo_analysis(repo_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -133,8 +144,9 @@ def repo_analysis(repo_name):
     bookmarks = user_manager.get_bookmarks()
     return render_template('repo_analysis.html', repo=repo_data, bookmarks=bookmarks)
 
-# API Routes for repository analysis
+    # API Routes for repository analysis
 @app.route('/api/summarize', methods=['POST'])
+# API: Summarize repository content using LLM and return Markdown and HTML
 def api_summarize():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -158,6 +170,7 @@ def api_summarize():
     })
 
 @app.route('/api/file-tree', methods=['POST'])
+# API: Retrieve file tree structure for a given repository path
 def api_file_tree():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -174,6 +187,7 @@ def api_file_tree():
     })
 
 @app.route('/api/scan', methods=['POST'])
+# API: Scan a file content using LLM and return Markdown and HTML results
 def api_scan():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -198,6 +212,7 @@ def api_scan():
     })
 
 @app.route('/api/export_summary/markdown', methods=['POST'])
+# API: Export summary as Markdown file download
 def export_summary_md():
     data = request.get_json()
     # receive pre-generated markdown content
@@ -208,6 +223,7 @@ def export_summary_md():
     return response
 
 @app.route('/api/export_summary/pdf', methods=['POST'])
+# API: Export summary as PDF by converting Markdown using markdown-pdf
 def export_summary_pdf():
     data = request.get_json()
     # receive pre-generated markdown content
@@ -226,6 +242,7 @@ def export_summary_pdf():
             os.remove(pdf_path)
 
 @app.route('/api/export_scan/markdown', methods=['POST'])
+# API: Export scan results as Markdown file download
 def export_scan_md():
     data = request.get_json()
     # receive pre-generated markdown content
@@ -236,6 +253,7 @@ def export_scan_md():
     return response
 
 @app.route('/api/export_scan/pdf', methods=['POST'])
+# API: Export scan results as PDF file download
 def export_scan_pdf():
     data = request.get_json()
     # receive pre-generated markdown content
@@ -253,6 +271,7 @@ def export_scan_pdf():
             os.remove(pdf_path)
 
 @app.route('/api/bookmark', methods=['POST'])
+# API: Bookmark a repository for the current user
 def api_bookmark():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -266,6 +285,7 @@ def api_bookmark():
     })
 
 @app.route('/toggle_bookmark', methods=['POST'])
+# Toggle bookmark; handles adding or removing based on form data
 def toggle_bookmark():
     if 'user_id' not in session:
         return redirect(url_for('login'))

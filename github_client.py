@@ -3,6 +3,7 @@ import base64
 
 class GitHubClient:
     def get_readme(self, url):
+        # Fetches and decodes the README content from the GitHub repository at the specified API URL endpoint.
         endpoint = "/readme"
         response = requests.get(url + endpoint)
 
@@ -15,6 +16,7 @@ class GitHubClient:
         return readme_content
 
     def get_latest_commit(self, url, default_branch):
+        # Retrieves the latest commit message and patch diffs from the default branch of the repository.
         endpoint = f"/commits/{default_branch}"
         response = requests.get(url + endpoint)
 
@@ -33,6 +35,7 @@ class GitHubClient:
         return (commit_message, commit_patches)
 
     def get_open_issues(self, url, has_issues):
+        # Returns a list of the most recent open issues (up to 5), each as a tuple of title, body, and creation date, if issues are enabled.
         if not has_issues:
             return None
         
@@ -48,6 +51,7 @@ class GitHubClient:
         return open_issues
 
     def get_repo_info(self, repo):
+        # Gathers repository metadata including full name, description, README, latest commit info, and open issues, returning them as a tuple.
         url = f"https://api.github.com/repos/{repo}"
         response = requests.get(url)
 
@@ -71,6 +75,7 @@ class GitHubClient:
         return (name, desc, readme, latest_commit, open_issues)
 
     def get_file_contents(self, repo, file_path):
+        # Fetches and decodes the contents of a specific file in the repository, or returns status code or False for directories.
         url = f"https://api.github.com/repos/{repo}/contents/{file_path}"
         response = requests.get(url)
 
@@ -92,6 +97,7 @@ class GitHubClient:
         return file_content
     
     def get_update_date(self, repo):
+        # Retrieves and returns the last updated timestamp for the repository.
         url = f"https://api.github.com/repos/{repo}"
         response = requests.get(url)
 
@@ -103,6 +109,7 @@ class GitHubClient:
         return repo_data['updated_at']
     
     def get_directory(self, repo, path):
+        # Retrieves and returns the directory contents in JSON format for the specified path in the repository.
         url = f"https://api.github.com/repos/{repo}/contents/{path}"
         response = requests.get(url)
 

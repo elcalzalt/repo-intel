@@ -51,15 +51,15 @@ class UserManager:
         )
 
     def _hash_password(self, password: str, salt: str) -> str:
-        """Hash a password with salt using SHA-256"""
+        # Hash a password with salt using SHA-256
         return hashlib.sha256((password + salt).encode()).hexdigest()
 
     def _generate_salt(self) -> str:
-        """Generate a random salt"""
+        # Generate a random salt
         return secrets.token_hex(16)
 
     def create_user(self, username: str, email: str, password: str) -> bool:
-        """Create a new user account"""
+        # Create a new user account
         try:
             with self.engine.begin() as conn:
                 existing_user = conn.execute(
@@ -87,7 +87,7 @@ class UserManager:
             return False
 
     def authenticate_user(self, username: str, password: str) -> bool:
-        """Authenticate a user and set current session"""
+        # Authenticate a user and set current session
         try:
             with self.engine.begin() as conn:
                 user = conn.execute(
@@ -118,22 +118,22 @@ class UserManager:
             return False
 
     def logout(self):
-        """Clear current user session"""
+        # Clear current user session
         self.current_user_id = None
         self.current_username = None
 
     def is_logged_in(self) -> bool:
-        """Check if a user is currently logged in"""
+        # Check if a user is currently logged in
         return self.current_user_id is not None
 
     def get_current_user(self) -> Optional[Tuple[int, str]]:
-        """Get current user info (id, username)"""
+        # Get current user info (id, username)
         if self.is_logged_in():
             return (self.current_user_id, self.current_username)
         return None
 
     def add_to_search_history(self, search_type: str, repo_name: str, file_path: Optional[str] = None):
-        """Add a search to user's history"""
+        # Add a search to user's history
         if not self.is_logged_in():
             return False
         
@@ -151,7 +151,7 @@ class UserManager:
             return False
 
     def get_search_history(self, limit: int = 20) -> List[Any]:
-        """Get user's search history"""
+        # Get user's search history
         if not self.is_logged_in():
             return []
         
@@ -168,7 +168,7 @@ class UserManager:
             return []
 
     def add_bookmark(self, repo_name: str) -> bool:
-        """Add a bookmark for the user"""
+        # Add a bookmark for the user
         if not self.is_logged_in():
             return False
         
@@ -193,7 +193,7 @@ class UserManager:
             return False
 
     def remove_bookmark(self, bookmark_id: int) -> bool:
-        """Remove a bookmark"""
+        # Remove a bookmark
         if not self.is_logged_in():
             return False
         
@@ -218,7 +218,7 @@ class UserManager:
             return False
 
     def get_bookmarks(self) -> List[Any]:
-        """Get user's bookmarks"""
+        # Get user's bookmarks
         if not self.is_logged_in():
             return []
         
@@ -235,7 +235,7 @@ class UserManager:
             return []
 
     def update_bookmark(self, bookmark_id: int, title: Optional[str] = None, notes: Optional[str] = None) -> bool:
-        """Update bookmark title and/or notes"""
+        # Update bookmark title and/or notes
         if not self.is_logged_in():
             return False
         
@@ -262,6 +262,9 @@ class UserManager:
             return False
 
     def summarize_repo(self, repo):
+        # Summarize the given repository by fetching its info, using cache to avoid redundant processing,
+        # and record search history if the user is logged in.
+        # Returns the summary or an error code integer.
         updated_at = self.gh.get_update_date(repo)
 
         if type(updated_at) is int:
@@ -293,6 +296,9 @@ class UserManager:
         return summary
     
     def scan_file(self, repo, file_path):
+        # Scan a specific file for vulnerabilities using the AI analyzer,
+        # utilizing caching to prevent redundant scans and updating search history.
+        # Returns the vulnerability report or an error code integer.
         updated_at = self.gh.get_update_date(repo)
 
         if type(updated_at) is int:
@@ -326,9 +332,14 @@ class UserManager:
         return report
     
     def get_file_tree(self, repo, path=""):
+        # Retrieve the file tree (directory structure) for a given repository path
+        # using the GitHub client.
+        # Returns a list/dictionary representing the directory contents.
         return self.gh.get_directory(repo, path)
     
     def get_user_info(self) -> Optional[dict]:
+        # Get current user's information from the database, including id, username, email,
+        # creation timestamp, and last login timestamp. Returns None if no user is logged in.
         if not self.is_logged_in():
             return None
         try:
