@@ -6,6 +6,32 @@
         <p>Find top GitHub repositories tailored to your interests.</p>
 
         <div class="search-wrapper">
+            <!-- Category Tags -->
+            <div class="categories">
+                <span onclick="location.href='/search?q=web+development'">
+                    <i class="fas fa-laptop-code" style="color: #4A90E2;"></i> Web Dev
+                </span>
+                <span onclick="location.href='/search?q=artificial+intelligence'">
+                    <i class="fas fa-brain" style="color: #9B59B6;"></i> AI
+                </span>
+                <span onclick="location.href='/search?q=mobile+development'">
+                    <i class="fas fa-mobile-alt" style="color: #27AE60;"></i> Mobile
+                </span>
+                <span onclick="location.href='/search?q=data+science'">
+                    <i class="fas fa-chart-line" style="color: #F39C12;"></i> Data Science
+                </span>
+                <span onclick="location.href='/search?q=cybersecurity'">
+                    <i class="fas fa-shield-alt" style="color: #E74C3C;"></i> Security
+                </span>
+                <span onclick="location.href='/search?q=devops'">
+                    <i class="fas fa-cogs" style="color: #16A085;"></i> DevOps
+                </span>
+                <span onclick="location.href='/search?q=game+development'">
+                    <i class="fas fa-gamepad" style="color: #8E44AD;"></i> Game Dev
+                </span>
+            </div>
+
+            <!-- Search Bar -->
             <form action="/search" method="get" class="search-box">
                 <i class="fas fa-search"></i>
                 <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..." value="{{ query }}"/>
