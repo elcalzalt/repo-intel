@@ -358,3 +358,14 @@ class UserManager:
             print(f"Error fetching user info: {e}")
         
         return None
+
+    def ask_question(self, repo, file_path, question):
+        # Scan a specific file and answer a question using the AI analyzer,
+        # Returns the LLM's response or an error code integer.
+        contents = self.gh.get_file_contents(repo, file_path)
+        answer = self.ai.answer_question(file_path, contents, question)
+
+        if self.is_logged_in():
+            self.add_to_search_history('Question', repo, file_path)
+
+        return answer

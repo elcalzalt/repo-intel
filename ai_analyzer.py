@@ -86,3 +86,24 @@ file contents:\n" + contents + "\n",
         if type(response.text) is not str:
             return "Unable to complete report"
         return response.text
+
+    def answer_question(self, file_path, contents, question) -> str:
+        # Scan the given file and answer the question provided
+        instr_path = os.path.join(self.base_dir, 'qna_instruction.txt')
+        with open(instr_path, 'rt') as system_instruction_file:
+            system_instruction_contents = system_instruction_file.read()
+        system_instruction_file.close()
+
+        response = self.client.models.generate_content(
+            model="gemini-2.5-flash",
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction_contents),
+            contents="Scan the given file and answer the question:\n\
+file path: " + file_path + "\n\
+file contents:\n" + contents + "\n\
+question:\n" + question + "\n",
+        )
+
+        if type(response.text) is not str:
+            return "Unable to complete report"
+        return response.text

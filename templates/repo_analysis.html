@@ -43,6 +43,16 @@
                     <span class="btn-spinner hidden">⟳</span>
                 </button>
             </div>
+            <!-- Ask Question Card -->
+            <div class="action-card" id="question-card">
+                <div class="action-icon">❓</div>
+                <h3>Ask a Question</h3>
+                <p>Ask any question about a specific file in the repository.</p>
+                <button class="btn btn-secondary" onclick="questionRepo()">
+                    <span class="btn-text">Ask Question</span>
+                    <span class="btn-spinner hidden">⟳</span>
+                </button>
+            </div>
 
             <div class="action-card" id="bookmark-card">
                 <div class="action-icon">🔖</div>
@@ -103,6 +113,16 @@
                     <button class="btn btn-outline" id="export-scan-md">Export MD</button>
                     <button class="btn btn-outline" id="export-scan-pdf">Export PDF</button>
                 </div>
+            </div>
+            <!-- Question Panel -->
+            <div id="question-results" class="result-panel hidden">
+                <h3>❓ Ask Question</h3>
+                <div id="file-tree-question" class="file-tree"></div>
+                <div id="question-form" class="search-box question-form hidden">
+                    <input type="text" id="question-input" class="question-input" placeholder="Enter your question here..." autocomplete="off" />
+                    <i id="submit-question" class="fas fa-paper-plane send-icon"></i>
+                </div>
+                <div class="question-content" id="question-content"></div>
             </div>
         </div>
     </section>
@@ -431,6 +451,125 @@
             });
         } catch(e) {
             console.error('Error binding export handlers:', e);
+        }
+    });
+    // Ask Question feature
+    let lastQuestionMd = '';
+    let lastQuestionPath = '';
+
+    function showFileTreeQuestion(tree) {
+        // hide question input until file selected
+        document.getElementById('question-form').classList.add('hidden');
+        const treeContainer = document.getElementById('file-tree-question');
+        treeContainer.innerHTML = '';
+        const ul = document.createElement('ul');
+        tree.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.name;
+            li.classList.add(item.type === 'dir' ? 'directory' : 'file');
+            li.addEventListener('click', () => {
+                if (item.type === 'dir') {
+                    loadDirectoryQuestion(item.path);
+                } else {
+                    initiateQuestion(item.path);
+                }
+            });
+            ul.appendChild(li);
+        });
+        treeContainer.appendChild(ul);
+        showResults('question', null, true);
+    }
+
+    async function loadDirectoryQuestion(path) {
+        try {
+            const res = await fetch('/api/file-tree', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ repo_name: repoData.full_name, file_path: path })
+            });
+            const result = await res.json();
+            if (result.success) {
+                showFileTreeQuestion(result.file_tree);
+            } else {
+                alert('Failed to load directory');
+            }
+        } catch(err) {
+            console.error('Directory load error:', err);
+        }
+    }
+
+    function initiateQuestion(filePath) {
+        lastQuestionPath = filePath;
+        document.getElementById('file-tree-question').classList.add('hidden');
+        const form = document.getElementById('question-form');
+        form.classList.remove('hidden');
+    }
+
+    async function questionRepo() {
+        const button = document.querySelector('#question-card button');
+        setButtonLoading(button, true);
+        document.getElementById('question-content').innerHTML = '';
+        // hide question input until a file is selected
+        document.getElementById('question-form').classList.add('hidden');
+        try {
+            const response = await fetch('/api/file-tree', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ repo_name: repoData.full_name })
+            });
+            const result = await response.json();
+            if (result.success) {
+                showFileTreeQuestion(result.file_tree);
+            } else {
+                alert('Failed to load file tree');
+            }
+        } catch(err) {
+            console.error('File tree error:', err);
+        } finally {
+            setButtonLoading(button, false);
+        }
+    }
+
+    // Submit question when clicking the send icon or pressing Enter
+    const qInput = document.getElementById('question-input');
+    const sendIcon = document.getElementById('submit-question');
+    function toggleSendLoading(isLoading) {
+        if (isLoading) {
+            sendIcon.classList.replace('fa-paper-plane', 'fa-circle-notch');
+            sendIcon.classList.add('loading');
+            qInput.disabled = true;
+        } else {
+            sendIcon.classList.replace('fa-circle-notch', 'fa-paper-plane');
+            sendIcon.classList.remove('loading');
+            qInput.disabled = false;
+        }
+    }
+    async function submitQuestion() {
+        const question = qInput.value.trim();
+        if (!question) { alert('Enter a question'); return; }
+        lastQuestionMd = question;
+        toggleSendLoading(true);
+        try {
+            const res = await fetch('/api/question', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ repo_name: repoData.full_name, file_path: lastQuestionPath, question })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('question-content').innerHTML = data.question_html;
+                showResults('question', data.question_html);
+            } else {
+                alert('Question failed: ' + data.message);
+            }
+        } catch (err) {
+            console.error('Question error:', err);
+        } finally {
+            toggleSendLoading(false);
+        }
+    }
+    sendIcon.addEventListener('click', submitQuestion);
+    qInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitQuestion();
         }
     });
 </script>

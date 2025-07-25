@@ -211,6 +211,33 @@ def api_scan():
         'scan_results_html': scan_results_html
     })
 
+@app.route('/api/question', methods=['POST'])
+# API: Ask question about file content using LLM and return Markdown and HTML
+def api_question():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    data = request.get_json()
+    repo_name = data.get('repo_name')
+    file_path = data.get('file_path')
+    question = data.get('question')
+
+    # Raw markdown response from LLM
+    question_md = user_manager.ask_question(repo_name, file_path, question)
+
+    # HTML conversion
+    question_html = markdown.markdown(
+        question_md,
+        extensions=['fenced_code', 'tables', 'codehilite']
+    )
+
+    return jsonify({
+        'success': True,
+        'question_md': question_md,
+        'question_html': question_html
+    })
+
+
 @app.route('/api/export_summary/markdown', methods=['POST'])
 # API: Export summary as Markdown file download
 def export_summary_md():
