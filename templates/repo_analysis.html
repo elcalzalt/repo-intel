@@ -82,10 +82,14 @@
     <section class="results-section hidden" id="results-section">
         <h2>📊 Analysis Results</h2>
         <div class="results-container">
-            <div id="summary-results" class="result-panel hidden">
+    <div id="summary-results" class="result-panel hidden">
                 <h3>📄 Repository Summary</h3>
                 <div class="summary-content" id="summary-content">
                     <!-- Summary content will be loaded here -->
+                </div>
+                <div class="export-buttons" style="display:none">
+                    <button class="btn btn-outline" id="export-summary-md">Export MD</button>
+                    <button class="btn btn-outline" id="export-summary-pdf">Export PDF</button>
                 </div>
             </div>
 
@@ -94,6 +98,10 @@
                 <div id="file-tree" class="file-tree"></div>
                 <div class="scan-content" id="scan-content">
                     <!-- Scan results will be loaded here -->
+                </div>
+                <div class="export-buttons" style="display:none">
+                    <button class="btn btn-outline" id="export-scan-md">Export MD</button>
+                    <button class="btn btn-outline" id="export-scan-pdf">Export PDF</button>
                 </div>
             </div>
         </div>
@@ -114,6 +122,9 @@
         full_name: "{{ repo.full_name or (repo.owner + '/' + repo.name) }}"
     };
 
+    // Store last generated markdown and track scanned file
+    let lastSummaryMd = '';
+    let lastScanMd = '';
     // Display file tree in UI
     function showFileTree(tree, currentPath) {
         const treeContainer = document.getElementById('file-tree');
@@ -157,6 +168,8 @@
         }
     }
 
+    // Track last scanned file path
+    let lastScannedPath = '';
     // Initiate file scan
     async function initiateScan(filePath) {
         try {
@@ -166,6 +179,9 @@
                 body: JSON.stringify({ repo_name: repoData.full_name, file_path: filePath })
             });
             const result = await response.json();
+            // store markdown for export
+            lastScanMd = result.scan_results_md;
+            lastScannedPath = filePath;
             if (result.success) {
                 showResults('scan', result.scan_results_html);
             } else {
@@ -195,6 +211,8 @@
             const result = await response.json();
 
             if (result.success) {
+                // store generated markdown for export
+                lastSummaryMd = result.summary_md;
                 showResults('summary', result.summary_html);
             } else {
                 alert('Failed to generate summary: ' + result.message);
@@ -306,6 +324,16 @@
             contentDiv.innerHTML = content;
         }
 
+        // Toggle export buttons
+    // hide all export sections first
+    document.querySelectorAll('.export-buttons').forEach(btns => {
+        btns.style.display = 'none';
+    });
+    // show export for this panel only if content exists
+    if (content) {
+        const expo = resultPanel.querySelector('.export-buttons');
+        if (expo) expo.style.display = 'block';
+    }
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: 'smooth' });
     }
@@ -347,5 +375,63 @@
             button.querySelector('.btn-spinner').classList.add('hidden');
         }
     }
+    // Utility to download blob as file
+    function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+    // Bind export button handlers on load
+    window.addEventListener('load', () => {
+        try {
+            document.getElementById('export-summary-md').addEventListener('click', async () => {
+                if (!lastSummaryMd) { alert('Generate summary first'); return; }
+                const res = await fetch('/api/export_summary/markdown', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ content: lastSummaryMd })
+                });
+                if (res.ok) {
+                    const blob = await res.blob(); downloadBlob(blob, 'summary.md');
+                } else alert('Export failed');
+            });
+            document.getElementById('export-summary-pdf').addEventListener('click', async () => {
+                if (!lastSummaryMd) { alert('Generate summary first'); return; }
+                const res = await fetch('/api/export_summary/pdf', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ content: lastSummaryMd })
+                });
+                if (res.ok) {
+                    const blob = await res.blob(); downloadBlob(blob, 'summary.pdf');
+                } else alert('Export failed');
+            });
+            document.getElementById('export-scan-md').addEventListener('click', async () => {
+                if (!lastScanMd) { alert('Run a scan first'); return; }
+                const res = await fetch('/api/export_scan/markdown', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ content: lastScanMd })
+                });
+                if (res.ok) {
+                    const blob = await res.blob(); downloadBlob(blob, 'scan.md');
+                } else alert('Export failed');
+            });
+            document.getElementById('export-scan-pdf').addEventListener('click', async () => {
+                if (!lastScanMd) { alert('Run a scan first'); return; }
+                const res = await fetch('/api/export_scan/pdf', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ content: lastScanMd })
+                });
+                if (res.ok) {
+                    const blob = await res.blob(); downloadBlob(blob, 'scan.pdf');
+                } else alert('Export failed');
+            });
+        } catch(e) {
+            console.error('Error binding export handlers:', e);
+        }
+    });
 </script>
 {% endblock content %}

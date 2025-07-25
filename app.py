@@ -4,6 +4,8 @@ from user_manager import UserManager
 from cache_db import CacheDatabase
 from time_ago import time_ago
 import markdown
+import subprocess, tempfile, os
+from flask import send_file, make_response
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
@@ -194,6 +196,61 @@ def api_scan():
         'scan_results_md': scan_results_md,
         'scan_results_html': scan_results_html
     })
+
+@app.route('/api/export_summary/markdown', methods=['POST'])
+def export_summary_md():
+    data = request.get_json()
+    # receive pre-generated markdown content
+    summary_md = data.get('content', '')
+    response = make_response(summary_md)
+    response.headers['Content-Type'] = 'text/markdown'
+    response.headers['Content-Disposition'] = 'attachment; filename=summary.md'
+    return response
+
+@app.route('/api/export_summary/pdf', methods=['POST'])
+def export_summary_pdf():
+    data = request.get_json()
+    # receive pre-generated markdown content
+    summary_md = data.get('content', '')
+    # write markdown to temp file
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.md') as md_file:
+        md_file.write(summary_md.encode('utf-8'))
+        md_path = md_file.name
+    pdf_path = md_path.replace('.md', '.pdf')
+    try:
+        subprocess.run(['npx', 'markdown-pdf', md_path, '-o', pdf_path], check=True)
+        return send_file(pdf_path, as_attachment=True, download_name='summary.pdf')
+    finally:
+        os.remove(md_path)
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+
+@app.route('/api/export_scan/markdown', methods=['POST'])
+def export_scan_md():
+    data = request.get_json()
+    # receive pre-generated markdown content
+    scan_md = data.get('content', '')
+    response = make_response(scan_md)
+    response.headers['Content-Type'] = 'text/markdown'
+    response.headers['Content-Disposition'] = 'attachment; filename=scan.md'
+    return response
+
+@app.route('/api/export_scan/pdf', methods=['POST'])
+def export_scan_pdf():
+    data = request.get_json()
+    # receive pre-generated markdown content
+    scan_md = data.get('content', '')
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.md') as md_file:
+        md_file.write(scan_md.encode('utf-8'))
+        md_path = md_file.name
+    pdf_path = md_path.replace('.md', '.pdf')
+    try:
+        subprocess.run(['npx', 'markdown-pdf', md_path, '-o', pdf_path], check=True)
+        return send_file(pdf_path, as_attachment=True, download_name='scan.pdf')
+    finally:
+        os.remove(md_path)
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
 
 @app.route('/api/bookmark', methods=['POST'])
 def api_bookmark():
