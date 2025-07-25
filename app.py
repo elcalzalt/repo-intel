@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from home import *
 from user_manager import UserManager
 from cache_db import CacheDatabase
+from time_ago import time_ago
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
@@ -113,6 +114,7 @@ def repo_analysis(repo_name):
                 stars = stars or repo_json.get('stargazers_count', '')
                 forks = forks or repo_json.get('forks_count', '')
                 updated_at = updated_at or repo_json.get('updated_at', '')
+                updated_at = time_ago(updated_at)
         except Exception as e:
             print(f"Error fetching metadata: {e}")
     repo_data = {
@@ -138,7 +140,6 @@ def api_summarize():
     data = request.get_json()
     repo_name = data.get('repo_name')
     
-    # Mock summary - replace with actual AI analysis
     summary = user_manager.summarize_repo(repo_name)
     
     return jsonify({
@@ -171,7 +172,6 @@ def api_scan():
     repo_name = data.get('repo_name')
     file_path = data.get('file_path')
     
-    # Mock scan results - replace with actual security scanning
     scan_results = user_manager.scan_file(repo_name, file_path)
     
     return jsonify({
