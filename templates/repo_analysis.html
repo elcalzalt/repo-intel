@@ -167,7 +167,7 @@
             });
             const result = await response.json();
             if (result.success) {
-                showResults('scan', result.scan_results);
+                showResults('scan', result.scan_results_html);
             } else {
                 alert('Scan failed: ' + result.message);
             }
@@ -195,7 +195,7 @@
             const result = await response.json();
 
             if (result.success) {
-                showResults('summary', result.summary);
+                showResults('summary', result.summary_html);
             } else {
                 alert('Failed to generate summary: ' + result.message);
             }

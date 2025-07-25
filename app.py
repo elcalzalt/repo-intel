@@ -3,6 +3,7 @@ from home import *
 from user_manager import UserManager
 from cache_db import CacheDatabase
 from time_ago import time_ago
+import markdown
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
@@ -139,11 +140,19 @@ def api_summarize():
     data = request.get_json()
     repo_name = data.get('repo_name')
     
-    summary = user_manager.summarize_repo(repo_name)
+    # Raw markdown response from LLM
+    summary_md = user_manager.summarize_repo(repo_name)
+
+    # HTML conversion
+    summary_html = markdown.markdown(
+        summary_md,
+        extensions=['fenced_code', 'tables', 'codehilite']
+    )
     
     return jsonify({
         'success': True,
-        'summary': summary
+        'summary_md': summary_md,
+        'summary_html': summary_html
     })
 
 @app.route('/api/file-tree', methods=['POST'])
@@ -171,11 +180,19 @@ def api_scan():
     repo_name = data.get('repo_name')
     file_path = data.get('file_path')
     
-    scan_results = user_manager.scan_file(repo_name, file_path)
+    # Raw markdown response from LLM
+    scan_results_md = user_manager.scan_file(repo_name, file_path)
+
+    # HTML conversion
+    scan_results_html = markdown.markdown(
+        scan_results_md,
+        extensions=['fenced_code', 'tables', 'codehilite']
+    )
     
     return jsonify({
         'success': True,
-        'scan_results': scan_results
+        'scan_results_md': scan_results_md,
+        'scan_results_html': scan_results_html
     })
 
 @app.route('/api/bookmark', methods=['POST'])
@@ -185,9 +202,6 @@ def api_bookmark():
     
     data = request.get_json()
     repo_name = data.get('repo_name')
-    
-    # Mock bookmark save - replace with actual database storage
-    # In real implementation, save to user's bookmarks in database
     
     return jsonify({
         'success': True,

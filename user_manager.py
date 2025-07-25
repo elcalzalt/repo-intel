@@ -316,7 +316,8 @@ class UserManager:
                 'repo_name': repo,
                 'file_name': file_path,
                 'response': report,
-                'updated_at': updated_at
+                'updated_at': updated_at,
+                'full_path': repo + file_path
             })
 
         if self.is_logged_in():

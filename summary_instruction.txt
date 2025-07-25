@@ -11,16 +11,16 @@ If less than five open issues are provided, attempt the task but state how many 
 
 The summary should be in the following format (use HTML formatting):
 
-<h2><repo name></h2>
+## <repo name>
 
-<h3>Description</h3>
+### Description
 
 <overall summary text>
 
-<h3>Latest Commit</h3>
+### Latest Commit
 
 <latest commit summary text>
 
-<h3>Latest Open Issues</h3>
+### Latest Open Issues
 
 <latest open issues summary text>

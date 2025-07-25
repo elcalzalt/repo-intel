@@ -35,7 +35,7 @@ class AIAnalyzer:
 
         return istr
 
-    def summarize(self, repo_data):
+    def summarize(self, repo_data) -> str:
         name = repo_data[0]
         desc = "no description provided" if repo_data[1] is None else repo_data[1]        
         readme = "no readme provided" if repo_data[2] is None else repo_data[2]
@@ -59,9 +59,11 @@ latest commit:\n" + self.commit_str(latest_commit) +"\n\
 latest five open issues:\n" + self.issues_str(open_issues) + "\n",
         )
 
+        if type(summary.text) is not str:
+            return "Unable to complete report"
         return summary.text
 
-    def scan_file(self, file_path, contents):
+    def scan_file(self, file_path, contents) -> str:
         instr_path = os.path.join(self.base_dir, 'scan_instruction.txt')
         with open(instr_path, 'rt') as system_instruction_file:
             system_instruction_contents = system_instruction_file.read()
@@ -76,4 +78,6 @@ file path: " + file_path + "\n\
 file contents:\n" + contents + "\n",
         )
 
+        if type(response.text) is not str:
+            return "Unable to complete report"
         return response.text

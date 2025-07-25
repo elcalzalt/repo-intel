@@ -6,20 +6,20 @@ If the file contents have no detected vulnerabilities state so in the report.
 
 The vunerability report should be in the following format:
 
-<h2><file path></h2>
+## <file path>
 
-<h3>Vunerability 1</h3>
-
-<explanation>
-
-.
-.
-.
-
-<h3>Vulnerability N</h3>
+### Vunerability 1
 
 <explanation>
 
-<h3>Tips</h3>
+.
+.
+.
+
+### Vulnerability N
+
+<explanation>
+
+### Tips
 
 <tips to resolve the vulnerabilities>
