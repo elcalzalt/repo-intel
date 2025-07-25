@@ -24,7 +24,8 @@ class GitHubClient:
             commit_data = response.json()
             commit_message = commit_data['commit']['message']
             for file in commit_data['files']:
-                commit_patches.append(file['patch'])
+                if 'patch' in file:
+                    commit_patches.append(file['patch'])
 
         if len(commit_patches) == 0:
             commit_patches = None
