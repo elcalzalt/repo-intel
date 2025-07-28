@@ -31,13 +31,69 @@
                 </span>
             </div>
 
-            <!-- Search Bar -->
-            <form action="/search" method="get" class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..." value="{{ query }}"/>
-            </form>
+            <!-- Search Bar with Filter -->
+            <div class="search-container">
+                <form class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..." value="{{ query }}"/>
+                    <button type="button" class="filter-toggle" onclick="toggleFilters()">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                </form>
+
+                <!-- Advanced Filters Dropdown -->
+                <div class="advanced-filters" id="advancedFilters">
+                    <div class="filter-section">
+                        <label for="language">Language</label>
+                        <select name="language" id="language">
+                            <option value="">Any Language</option>
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="c++">C++</option>
+                            <option value="go">Go</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="php">PHP</option>
+                            <option value="c#">C#</option>
+                            <option value="typescript">TypeScript</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-section">
+                        <label for="stars">Minimum Stars</label>
+                        <select name="stars" id="stars">
+                            <option value="">Any</option>
+                            <option value="100">100+</option>
+                            <option value="500">500+</option>
+                            <option value="1000">1000+</option>
+                            <option value="5000">5000+</option>
+                            <option value="10000">10000+</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-section">
+                        <label for="updated">Last Updated</label>
+                        <select name="updated" id="updated">
+                            <option value="">Any Time</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-3-months">Last 3 months</option>
+                            <option value="last-year">Last year</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="apply-filters">Apply Filters</button>
+                </div>
+            </div>
             <ul id="suggestions"></ul>
         </div>
+
+        <!-- Hidden form for actual search submission -->
+        <form id="searchForm" action="/search" method="get" style="display: none;">
+            <input type="text" name="q" id="hiddenSearchInput">
+            <input type="text" name="language" id="hiddenLanguage">
+            <input type="text" name="stars" id="hiddenStars">
+            <input type="text" name="updated" id="hiddenUpdated">
+        </form>
     </section>
 
     <section class="popular-repos">
