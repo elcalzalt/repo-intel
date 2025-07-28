@@ -176,6 +176,7 @@ nav li a:hover {
     color: #00adb5;
 }
 
+/* Advanced Filter Styling */
 .advanced-filters {
     position: absolute;
     top: calc(100% + 10px);
@@ -185,38 +186,57 @@ nav li a:hover {
     padding: 1.5em;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     z-index: 100;
-    width: 280px;
+    width: 700px;
     display: none;
-    flex-direction: column;
-    gap: 1em;
 }
 
 .advanced-filters.show {
-    display: flex;
+    display: block;
 }
 
-.filter-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+.advanced-filters h3 {
+    margin-top: 0;
+    margin-bottom: 1em;
+    color: #222;
+    font-size: 1.2em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5em;
 }
 
-.filter-section label {
+.filter-grid {
+    display: flex;
+    gap: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.filter-column {
+    flex: 1;
+}
+
+.filter-group {
+    margin-bottom: 1em;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.5em;
     font-size: 0.9em;
     color: #555;
     font-weight: 600;
 }
 
-.filter-section select {
+.filter-group select,
+.filter-group input[type="text"],
+.filter-group input[type="date"] {
+    width: 100%;
     padding: 0.6em;
     border-radius: 6px;
     border: 1px solid #ddd;
-    background: #fff;
     font-size: 0.9em;
-    width: 100%;
 }
 
 .apply-filters {
+    width: 100%;
     padding: 0.8em;
     background: #00adb5;
     color: white;
@@ -225,11 +245,42 @@ nav li a:hover {
     cursor: pointer;
     font-weight: 600;
     transition: background 0.3s;
-    margin-top: 0.5em;
 }
 
 .apply-filters:hover {
     background: #007f8f;
+}
+
+/* Dark mode styles */
+.dark .advanced-filters {
+    background: #2b2b2b;
+    border: 1px solid #444;
+}
+
+.dark .advanced-filters h3 {
+    color: #e0e0e0;
+    border-bottom-color: #444;
+}
+
+.dark .filter-group label {
+    color: #bbb;
+}
+
+.dark .filter-group select,
+.dark .filter-group input[type="text"],
+.dark .filter-group input[type="date"] {
+    background: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+.dark .apply-filters {
+    background: #00ffc3;
+    color: #222;
+}
+
+.dark .apply-filters:hover {
+    background: #00c9a7;
 }
 
 /* Dropdown inside search-box */
@@ -526,3 +577,4 @@ footer {
     opacity: 1;
     color: #00adb5;
 }
+

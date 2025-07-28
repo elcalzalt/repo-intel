@@ -128,23 +128,29 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             console.log('Apply filters clicked');
 
-            // Verify all required elements exist
-            if (!searchInput || !languageSelect || !starsSelect || !updatedSelect) {
-                console.error('Required form elements missing');
-                return;
-            }
-
             // Set values in hidden form
             document.getElementById('hiddenSearchInput').value = searchInput.value;
-            document.getElementById('hiddenLanguage').value = languageSelect.value;
-            document.getElementById('hiddenStars').value = starsSelect.value;
-            document.getElementById('hiddenUpdated').value = updatedSelect.value;
+            document.getElementById('hiddenLanguage').value = document.getElementById('language').value;
+            document.getElementById('hiddenStars').value = document.getElementById('stars').value;
+            document.getElementById('hiddenForks').value = document.getElementById('forks').value;
+            document.getElementById('hiddenSize').value = document.getElementById('size').value;
+            document.getElementById('hiddenCreatedAfter').value = document.getElementById('created_after').value;
+            document.getElementById('hiddenUpdatedAfter').value = document.getElementById('updated_after').value;
+            document.getElementById('hiddenLicense').value = document.getElementById('license').value;
+            document.getElementById('hiddenTopic').value = document.getElementById('topic').value;
+            document.getElementById('hiddenOrg').value = document.getElementById('org').value;
 
-            console.log('Form values set:', {
+            console.log('Form values:', {
                 q: searchInput.value,
-                language: languageSelect.value,
-                stars: starsSelect.value,
-                updated: updatedSelect.value
+                language: document.getElementById('language').value,
+                stars: document.getElementById('stars').value,
+                forks: document.getElementById('forks').value,
+                size: document.getElementById('size').value,
+                created_after: document.getElementById('created_after').value,
+                updated_after: document.getElementById('updated_after').value,
+                license: document.getElementById('license').value,
+                topic: document.getElementById('topic').value,
+                org: document.getElementById('org').value
             });
 
             // Submit the form
