@@ -1,4 +1,4 @@
-import requests
+import requests, re
 from datetime import datetime, timedelta
 
 def getTrendy():
@@ -30,8 +30,39 @@ def getTrendy():
         for repo in data.get("items", [])
     ]
 
-def search(query):
-    query += "~"
+def clean_user_query(raw_query):
+    cleaned = raw_query.strip()
+    cleaned = re.sub(r'[\"\'\\;:{}\[\]]+', '', cleaned)
+    return cleaned
+
+def validate_filters(filters):
+    valid = {}
+    for key, value in filters.items():
+        if not value:
+            continue
+        if key in {"created", "pushed"}:
+            if re.match(r"\d{4}-\d{2}-\d{2}", value):
+                valid[key] = value
+        elif key == "stars":
+            if re.match(r"^(\d+\.\.\d+|[<>]=?\d+|\d+)$", value):
+                valid[key] = value
+        else:
+            valid[key] = re.sub(r'[\"\'\\;:{}\[\]]+', '', value)
+    return valid
+
+def search(query, filters):
+    query = clean_user_query(query)
+    filters = validate_filters(filters)
+
+    if filters:
+        parts = [query]
+        for key, value in filters.items():
+            if key in {"created", "pushed"}:
+                parts.append(f"{key}:>={value}")
+            else:
+                parts.append(f"{key}:{value}")
+        query = "+".join(parts) + '~'
+
     url = "https://api.github.com/search/repositories"
     params = {
         "q": query,
@@ -45,6 +76,7 @@ def search(query):
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     data = response.json()
+
     return [
         {
             "name": repo["full_name"],
