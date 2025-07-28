@@ -12,10 +12,11 @@ header {
     color: #fff;
     display: flex;
     justify-content: space-between;
-    padding: 1em 2em;
+    padding: 1em 1em;
     align-items: center;
     position: relative;
     z-index: 100;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -32,6 +33,7 @@ header {
     align-items: center;
     gap: 1rem;
     position: relative;
+    flex-shrink: 0;
 }
 
 nav ul {
@@ -125,12 +127,14 @@ nav li a:hover {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
+    width: calc(100% - 2em);
+    padding: 0 1em;
 }
 
 .search-container {
     position: relative;
     width: 100%;
+    min-width: 250px;
 }
 
 .search-box {
@@ -138,8 +142,9 @@ nav li a:hover {
     align-items: center;
     background: #fff;
     border-radius: 50px;
-    padding: 0.5em 1.2em;
+    padding: 0.5em 1em;
     width: 100%;
+    box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 2;
     position: relative;
@@ -183,11 +188,14 @@ nav li a:hover {
     right: 0;
     background: #fff;
     border-radius: 12px;
-    padding: 1.5em;
+    padding: 1.2em;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     z-index: 100;
-    width: 700px;
+    width: min(750px, 90vw);
+    max-width: calc(100vw - 2rem);
     display: none;
+    overflow-y: auto;
+    max-height: 80vh;
 }
 
 .advanced-filters.show {
@@ -195,49 +203,58 @@ nav li a:hover {
 }
 
 .advanced-filters h3 {
-    margin-top: 0;
-    margin-bottom: 1em;
+    margin: 0 0 1em 0;
+    padding-bottom: 0.8em;
     color: #222;
     font-size: 1.2em;
     border-bottom: 1px solid #eee;
-    padding-bottom: 0.5em;
 }
 
 .filter-grid {
     display: flex;
-    gap: 1.5em;
-    margin-bottom: 1.5em;
+    flex-wrap: wrap;
+    gap: 1.2em;
+    margin-bottom: 1em;
 }
 
 .filter-column {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .filter-group {
     margin-bottom: 1em;
+    min-height: 80px;
 }
 
 .filter-group label {
     display: block;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.4em;
     font-size: 0.9em;
     color: #555;
     font-weight: 600;
+    height: 18px;
+    line-height: 18px;
 }
 
 .filter-group select,
 .filter-group input[type="text"],
 .filter-group input[type="date"] {
     width: 100%;
-    padding: 0.6em;
+    padding: 0.6em 0.75em;
     border-radius: 6px;
     border: 1px solid #ddd;
     font-size: 0.9em;
+    box-sizing: border-box;
+    height: 38px;
 }
 
 .apply-filters {
     width: 100%;
     padding: 0.8em;
+    margin-top: 0.5em;
     background: #00adb5;
     color: white;
     border: none;
@@ -245,11 +262,52 @@ nav li a:hover {
     cursor: pointer;
     font-weight: 600;
     transition: background 0.3s;
+    font-size: 0.95em;
 }
 
 .apply-filters:hover {
     background: #007f8f;
 }
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .advanced-filters {
+        width: 90vw;
+        right: 5vw;
+        left: 5vw;
+    }
+
+    .filter-column {
+        flex: 100%;
+        min-width: 100%;
+    }
+
+    .filter-group {
+        min-height: auto;
+        margin-bottom: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .advanced-filters {
+        padding: 1em;
+    }
+
+    .filter-grid {
+        gap: 0.8em;
+    }
+
+    .filter-group label {
+        font-size: 0.85em;
+    }
+
+    .filter-group input[type="text"],
+    .filter-group input[type="date"] {
+        height: 36px;
+        padding: 0.5em 0.7em;
+    }
+}
+
 
 /* Dark mode styles */
 .dark .advanced-filters {
