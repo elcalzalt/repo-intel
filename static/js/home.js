@@ -160,30 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Apply filters button or search form not found');
     }
 
-    // Handle pressing Enter in search input to submit with filters
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                console.log('Enter pressed in search input');
-
-                // If filters are open, apply them
-                if (advancedFilters && advancedFilters.classList.contains('show')) {
-                    if (applyFiltersBtn) {
-                        applyFiltersBtn.click();
-                    }
-                } else {
-                    // Regular search without filters
-                    document.getElementById('hiddenSearchInput').value = searchInput.value;
-                    document.getElementById('hiddenLanguage').value = '';
-                    document.getElementById('hiddenStars').value = '';
-                    document.getElementById('hiddenUpdated').value = '';
-                    searchForm.submit();
-                }
-            }
-        });
-    }
-
     // Close filters when pressing Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && advancedFilters && advancedFilters.classList.contains('show')) {
