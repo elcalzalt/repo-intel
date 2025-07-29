@@ -33,118 +33,132 @@
 
             <!-- Search Bar with Filter -->
             <div class="search-container">
-                <form class="search-box">
+                <form action="/search" method="get" class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..." value="{{ query }}"/>
+                    <input type="text" name="q" id="searchInput" placeholder="Search for repositories, topics..."
+                        value="{{ query }}" />
                     <button type="button" class="filter-toggle" onclick="toggleFilters()">
                         <i class="fas fa-sliders-h"></i>
                     </button>
-                </form>
 
-                <!-- Advanced Filters Dropdown -->
-                <div class="advanced-filters" id="advancedFilters">
-                    <h3>Advanced Filters</h3>
+                    <div class="advanced-filters" id="advancedFilters">
+                        <h3>Advanced Filters</h3>
+                        <!-- <div class="filter-group" style="margin-top: 1rem;">
+                            <label for="visibility">Visibility</label>
+                            <select name="is" id="visibility">
+                                <option value="">Any</option>
+                                <option value="public" {% if request.args.get('is')=='public' %}selected{% endif %}>
+                                    Public
+                                </option>
+                                <option value="private" {% if request.args.get('is')=='private' %}selected{% endif %}>
+                                    Private
+                                </option>
+                            </select>
+                        </div> -->
+                        <div class="filter-grid">
+                            <!-- Column 1 -->
+                            <div class="filter-column">
+                                <div class="filter-group">
+                                    <label for="language">Language</label>
+                                    <input type="text" name="language" id="language" placeholder="e.g. python"
+                                        value="{{ request.args.get('language', '') }}">
+                                </div>
 
-                    <div class="filter-grid">
-                        <div class="filter-column">
-                            <div class="filter-group">
-                                <label>Language</label>
-                                <!--Input Option-->
-                                <input type="text" name="language" id="language" placeholder="e.g. python">
-                                <!-- Dropdown option
-                                <select name="language" id="language">
-                                    <option value="">Any</option>
-                                    <option value="python">Python</option>
-                                    <option value="javascript">JavaScript</option>
-                                    <option value="java">Java</option>
-                                    <option value="c++">C++</option>
-                                    <option value="go">Go</option>
-                                </select>
-                                -->
+                                <div class="filter-group">
+                                    <label for="stars">Stars</label>
+                                    <input type="text" name="stars" id="stars" placeholder="e.g. >100"
+                                        value="{{ request.args.get('stars', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="forks">Forks</label>
+                                    <input type="text" name="forks" id="forks" placeholder="e.g. >=10"
+                                        value="{{ request.args.get('forks', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="size">Size (KB)</label>
+                                    <input type="text" name="size" id="size" placeholder="e.g. <500"
+                                        value="{{ request.args.get('size', '') }}">
+                                </div>
                             </div>
 
-                            <div class="filter-group">
-                                <label>Stars</label>
-                                <input type="text" name="stars" id="stars" placeholder="e.g. 500">
+                            <!-- Column 2 -->
+                            <div class="filter-column">
+                                <div class="filter-group">
+                                    <label for="created">Created After</label>
+                                    <input type="date" name="created" id="created"
+                                        value="{{ request.args.get('created', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="pushed">Updated After</label>
+                                    <input type="date" name="pushed" id="pushed"
+                                        value="{{ request.args.get('pushed', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="user">User</label>
+                                    <input type="text" name="user" id="user" placeholder="e.g. octocat"
+                                        value="{{ request.args.get('user', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="org">Organization</label>
+                                    <input type="text" name="org" id="org" placeholder="e.g. google"
+                                        value="{{ request.args.get('org', '') }}">
+                                </div>
                             </div>
 
-                            <div class="filter-group">
-                                <label>Forks</label>
-                                <input type="text" name="forks" id="forks" placeholder="e.g. >=10">
-                            </div>
+                            <!-- Column 3 -->
+                            <div class="filter-column">
+                                <div class="filter-group">
+                                    <label for="license">License</label>
+                                    <input type="text" name="license" id="license" placeholder="e.g. mit, apache-2.0"
+                                        value="{{ request.args.get('license', '') }}">
+                                </div>
 
-                            <div class="filter-group">
-                                <label>Size (KB)</label>
-                                <input type="text" name="size" id="size" placeholder="e.g. <500">
+                                <div class="filter-group">
+                                    <label for="archived">Archived</label>
+                                    <select name="archived" id="archived">
+                                        <option value="">Any</option>
+                                        <option value="true" {% if request.args.get('archived')=='true' %}selected{%
+                                            endif %}>
+                                            Yes</option>
+                                        <option value="false" {% if request.args.get('archived')=='false' %}selected{%
+                                            endif %}>
+                                            No</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="mirror">Mirror</label>
+                                    <select name="mirror" id="mirror">
+                                        <option value="">Any</option>
+                                        <option value="true" {% if request.args.get('mirror')=='true' %}selected{% endif
+                                            %}>
+                                            Yes
+                                        </option>
+                                        <option value="false" {% if request.args.get('mirror')=='false' %}selected{%
+                                            endif %}>No
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="topic">Topic</label>
+                                    <input type="text" name="topic" id="topic" placeholder="e.g. machine-learning"
+                                        value="{{ request.args.get('topic', '') }}">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="filter-column">
-                            <div class="filter-group">
-                                <label>Created After</label>
-                                <input type="date" name="created_after" id="created_after">
-                            </div>
-
-                            <div class="filter-group">
-                                <label>Updated After</label>
-                                <input type="date" name="updated_after" id="updated_after">
-                            </div>
-
-                            <div class="filter-group">
-                                <label>User</label>
-                                <input type="text" name="user" id="user" placeholder="e.g. octocat">
-                            </div>
-
-                            <div class="filter-group">
-                                <label>Organization</label>
-                                <input type="text" name="org" id="org" placeholder="e.g. google">
-                            </div>
-                        </div>
-
-                        <div class="filter-column">
-                            <div class="filter-group">
-                                <label>License</label>
-                                <input type="text" name="license" id="license" placeholder="e.g. mit, apache-2.0">
-                            </div>
-
-                            <div class="filter-group">
-                                <label>Archived</label>
-                                <select name="archived" id="archived">
-                                    <option value="">Any</option>
-                                    <option value="true">Yes</option>
-                                    <option value="false">No</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label>Mirror</label>
-                                <select name="mirror" id="mirror">
-                                    <option value="">Any</option>
-                                    <option value="true">Yes</option>
-                                    <option value="false">No</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label>Topic</label>
-                                <input type="text" name="topic" id="topic" placeholder="e.g. machine-learning">
-                            </div>
-                        </div>
+                        <button type="submit" class="apply-filters">Apply Filters</button>
                     </div>
-
-                    <button type="button" class="apply-filters">Apply Filters</button>
-                </div>
+                </form>
+                <ul id="suggestions"></ul>
             </div>
-            <ul id="suggestions"></ul>
         </div>
-
-        <!-- Hidden form for actual search submission -->
-        <form id="searchForm" action="/search" method="get" style="display: none;">
-            <input type="text" name="q" id="hiddenSearchInput">
-            <input type="text" name="language" id="hiddenLanguage">
-            <input type="text" name="stars" id="hiddenStars">
-            <input type="text" name="updated" id="hiddenUpdated">
-        </form>
     </section>
 
     <section class="how-it-works">
@@ -170,10 +184,8 @@
         <div class="carousel-container">
             <div class="repo-cards" id="repoCards">
                 {% for repo in repos %}
-                <form method="post"
-                      action="{{ url_for('repo_analysis', repo_name=repo.name) }}"
-                      class="repo-card"
-                      onclick="this.submit()">
+                <form method="post" action="{{ url_for('repo_analysis', repo_name=repo.name) }}" class="repo-card"
+                    onclick="this.submit()">
                     <input type="hidden" name="full_name" value="{{ repo.name }}" />
                     <input type="hidden" name="name" value="{{ repo.name.split('/')[-1] }}" />
                     <input type="hidden" name="owner" value="{{ repo.name.split('/')[0] }}" />
