@@ -49,15 +49,15 @@ def clean_user_query(raw_query):
 def validate_filters(filters):
     valid = {}
     for key, value in filters.items():
-        if not value:
-            continue
-        if key in {"created", "pushed"}:
-            if re.match(r"\d{4}-\d{2}-\d{2}", value):
-                valid[key] = value
-        elif key == "stars":
-            if re.match(r"^(\d+\.\.\d+|[<>]=?\d+|\d+)$", value):
-                valid[key] = value
-        else:
+        if isinstance(value, list):
+            cleaned_list = [
+                re.sub(r'[\"\'\\;:{}\[\]]+', '', v)
+                for v in value
+                if isinstance(v, str) and v.strip()
+            ]
+            if cleaned_list:
+                valid[key] = cleaned_list
+        elif isinstance(value, str) and value.strip():
             valid[key] = re.sub(r'[\"\'\\;:{}\[\]]+', '', value)
     return valid
 
@@ -65,18 +65,26 @@ def search(query, filters):
     query = clean_user_query(query)
     filters = validate_filters(filters)
 
-    if filters:
-        parts = [query]
-        for key, value in filters.items():
-            if key in {"created", "pushed"}:
-                parts.append(f"{key}:>={value}")
+    parts = [query] if query else []
+
+    for key, value in filters.items():
+        if key in {"created", "pushed"}:
+            parts.append(f"{key}:>={value}")
+        elif key == "in":
+            if isinstance(value, list):
+                for item in value:
+                    parts.append(f"in:{item}")
             else:
-                parts.append(f"{key}:{value}")
-        query = "+".join(parts) + '~'
+                parts.append(f"in:{value}")
+        elif key in {"user", "org", "license", "language", "topic", "archived", "mirror", "size", "stars", "forks"}:
+            parts.append(f"{key}:{value}")
+
+    final_query = " ".join(parts)
+    print("Final GitHub query:", final_query)
 
     url = "https://api.github.com/search/repositories"
     params = {
-        "q": query,
+        "q": final_query,
         "order": "desc",
         "per_page": 20
     }

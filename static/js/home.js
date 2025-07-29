@@ -1,5 +1,5 @@
 // Wait for DOM to be fully loaded before executing
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
     const suggestions = document.getElementById('suggestions');
     const repoCards = document.getElementById('repoCards');
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Close filters when clicking outside
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!advancedFilters) return;
 
         const isClickInsideFilters = advancedFilters.contains(event.target);
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enhanced form submission with filters
     if (applyFiltersBtn && searchForm) {
-        applyFiltersBtn.addEventListener('click', function(e) {
+        applyFiltersBtn.addEventListener('click', function (e) {
             e.preventDefault();
             console.log('Apply filters clicked');
 
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Close filters when pressing Escape
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && advancedFilters && advancedFilters.classList.contains('show')) {
             advancedFilters.classList.remove('show');
             console.log('Filters hidden (Escape key)');
@@ -170,4 +170,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Additional debugging
     console.log('Home.js initialized successfully');
+});
+
+
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    dropdown.classList.toggle('open');
+}
+
+function updateDropdownText(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+    const selectedText = dropdown.querySelector('.selected-text');
+
+    if (checkboxes.length === 0) {
+        selectedText.textContent = 'Select search fields...';
+        selectedText.classList.remove('has-selection');
+    } else {
+        const values = Array.from(checkboxes).map(cb => {
+            const label = cb.parentElement.textContent.trim();
+            return label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+        });
+        selectedText.textContent = values.join(', ');
+        selectedText.classList.add('has-selection');
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function (event) {
+    const dropdowns = document.querySelectorAll('.custom-dropdown');
+    dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+});
+
+// Initialize dropdown text on page load
+document.addEventListener('DOMContentLoaded', function () {
+    updateDropdownText('inDropdown');
 });

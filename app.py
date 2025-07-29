@@ -86,6 +86,7 @@ def search_route():
         "topic": request.args.get("topic"),
         "user": request.args.get("user"),
         "org": request.args.get("org"),
+        "in": request.args.getlist("in")
     }
     results = search(query, filters) if query else []
     return render_template('search.html', results=results, query=query)

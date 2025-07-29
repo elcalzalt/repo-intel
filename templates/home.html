@@ -23,9 +23,6 @@
                 <span onclick="location.href='/search?q=cybersecurity'">
                     <i class="fas fa-shield-alt" style="color: #E74C3C;"></i> Security
                 </span>
-                <span onclick="location.href='/search?q=devops'">
-                    <i class="fas fa-cogs" style="color: #16A085;"></i> DevOps
-                </span>
                 <span onclick="location.href='/search?q=game+development'">
                     <i class="fas fa-gamepad" style="color: #8E44AD;"></i> Game Dev
                 </span>
@@ -107,6 +104,36 @@
                                     <label for="org">Organization</label>
                                     <input type="text" name="org" id="org" placeholder="e.g. google"
                                         value="{{ request.args.get('org', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="in">Search In</label>
+                                    <div class="custom-dropdown" id="inDropdown">
+                                        <div class="dropdown-selected" onclick="toggleDropdown('inDropdown')">
+                                            <span class="selected-text">Select search fields...</span>
+                                            <span class="dropdown-arrow">▼</span>
+                                        </div>
+                                        <div class="dropdown-options">
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="name" 
+                                                    {% if 'name' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                Name
+                                            </label>
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="readme" 
+                                                    {% if 'readme' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                README
+                                            </label>
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="description" 
+                                                    {% if 'description' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                Description
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

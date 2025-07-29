@@ -53,30 +53,60 @@
 
                         <!-- Column 2 -->
                         <div class="filter-column">
-                            <div class="filter-group">
-                                <label for="created">Created After</label>
-                                <input type="date" name="created" id="created"
-                                    value="{{ request.args.get('created', '') }}">
-                            </div>
+                                <div class="filter-group">
+                                    <label for="created">Created After</label>
+                                    <input type="date" name="created" id="created"
+                                        value="{{ request.args.get('created', '') }}">
+                                </div>
 
-                            <div class="filter-group">
-                                <label for="pushed">Updated After</label>
-                                <input type="date" name="pushed" id="pushed"
-                                    value="{{ request.args.get('pushed', '') }}">
-                            </div>
+                                <div class="filter-group">
+                                    <label for="pushed">Updated After</label>
+                                    <input type="date" name="pushed" id="pushed"
+                                        value="{{ request.args.get('pushed', '') }}">
+                                </div>
 
-                            <div class="filter-group">
-                                <label for="user">User</label>
-                                <input type="text" name="user" id="user" placeholder="e.g. octocat"
-                                    value="{{ request.args.get('user', '') }}">
-                            </div>
+                                <div class="filter-group">
+                                    <label for="user">User</label>
+                                    <input type="text" name="user" id="user" placeholder="e.g. octocat"
+                                        value="{{ request.args.get('user', '') }}">
+                                </div>
 
-                            <div class="filter-group">
-                                <label for="org">Organization</label>
-                                <input type="text" name="org" id="org" placeholder="e.g. google"
-                                    value="{{ request.args.get('org', '') }}">
+                                <div class="filter-group">
+                                    <label for="org">Organization</label>
+                                    <input type="text" name="org" id="org" placeholder="e.g. google"
+                                        value="{{ request.args.get('org', '') }}">
+                                </div>
+
+                                <div class="filter-group">
+                                    <label for="in">Search In</label>
+                                    <div class="custom-dropdown" id="inDropdown">
+                                        <div class="dropdown-selected" onclick="toggleDropdown('inDropdown')">
+                                            <span class="selected-text">Select search fields...</span>
+                                            <span class="dropdown-arrow">▼</span>
+                                        </div>
+                                        <div class="dropdown-options">
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="name" 
+                                                    {% if 'name' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                Name
+                                            </label>
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="readme" 
+                                                    {% if 'readme' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                README
+                                            </label>
+                                            <label class="dropdown-option">
+                                                <input type="checkbox" name="in" value="description" 
+                                                    {% if 'description' in request.args.getlist('in') %}checked{% endif %}
+                                                    onchange="updateDropdownText('inDropdown')">
+                                                Description
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
                         <!-- Column 3 -->
                         <div class="filter-column">
