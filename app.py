@@ -1,6 +1,3 @@
-"""Flask application for repository analysis and user management.
-Provides routes for authentication, repository operations, summarization,
-file structure browsing, scanning, exporting results, and bookmarks."""
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from home import *
 from user_manager import UserManager
@@ -75,7 +72,22 @@ def search_route():
         return redirect(url_for('login'))
     
     query = request.args.get("q", "")
-    results = search(query) if query else []
+    filters = {
+        "language": request.args.get("language"),
+        "stars": request.args.get("stars"),
+        "forks": request.args.get("forks"),
+        "size": request.args.get("size"),
+        "created": request.args.get("created"),
+        "pushed": request.args.get("pushed"),
+        "license": request.args.get("license"),
+        "archived": request.args.get("archived"),
+        "mirror": request.args.get("mirror"),
+        # "is": request.args.get("is"),
+        "topic": request.args.get("topic"),
+        "user": request.args.get("user"),
+        "org": request.args.get("org"),
+    }
+    results = search(query, filters) if query else []
     return render_template('search.html', results=results, query=query)
 
 @app.route('/profile')
