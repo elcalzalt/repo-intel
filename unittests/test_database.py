@@ -38,8 +38,9 @@ class TestDatabase(unittest.TestCase):
         file = 'file.py'
         resp = 'vuln result'
         tstamp = '321'
+        fullpath = repo + file
         # insert vulnerability data
-        self.db.insert_data(self.db.vulnerability_cache, {'repo_name': repo, 'file_name': file, 'response': resp, 'updated_at': tstamp})
+        self.db.insert_data(self.db.vulnerability_cache, {'repo_name': repo, 'file_name': file, 'response': resp, 'updated_at': tstamp, 'full_path': fullpath})
         # retrieve
         response, exists, up_to_date = self.db.get_recent_cache(repo, self.db.vulnerability_cache, tstamp, file)
         self.assertTrue(exists)
