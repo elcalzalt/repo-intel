@@ -18,7 +18,8 @@ def getTrendy():
     }
 
     headers = {
-        "Accept": "application/vnd.github+json"
+        "Accept": "application/vnd.github+json",
+        'Authorization': 'Bearer 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'
     }
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()

@@ -210,3 +210,25 @@ document.addEventListener('click', function (event) {
 document.addEventListener('DOMContentLoaded', function () {
     updateDropdownText('inDropdown');
 });
+
+function clearFilters() {
+    const form = document.querySelector(".search-box");
+
+    // Clear all input fields
+    form.querySelectorAll("input[type='text'], input[type='date']").forEach(input => {
+        input.value = '';
+    });
+
+    // Uncheck all checkboxes (like "in" checkboxes)
+    form.querySelectorAll("input[type='checkbox']").forEach(cb => {
+        cb.checked = false;
+    });
+
+    // Reset all selects
+    form.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;
+    });
+
+    // Clear search bar text
+    document.getElementById("searchInput").value = '';
+}

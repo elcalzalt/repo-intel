@@ -115,20 +115,20 @@
                                         </div>
                                         <div class="dropdown-options">
                                             <label class="dropdown-option">
-                                                <input type="checkbox" name="in" value="name" 
-                                                    {% if 'name' in request.args.getlist('in') %}checked{% endif %}
+                                                <input type="checkbox" name="in" value="name" {% if 'name' in
+                                                    request.args.getlist('in') %}checked{% endif %}
                                                     onchange="updateDropdownText('inDropdown')">
                                                 Name
                                             </label>
                                             <label class="dropdown-option">
-                                                <input type="checkbox" name="in" value="readme" 
-                                                    {% if 'readme' in request.args.getlist('in') %}checked{% endif %}
+                                                <input type="checkbox" name="in" value="readme" {% if 'readme' in
+                                                    request.args.getlist('in') %}checked{% endif %}
                                                     onchange="updateDropdownText('inDropdown')">
                                                 README
                                             </label>
                                             <label class="dropdown-option">
-                                                <input type="checkbox" name="in" value="description" 
-                                                    {% if 'description' in request.args.getlist('in') %}checked{% endif %}
+                                                <input type="checkbox" name="in" value="description" {% if 'description'
+                                                    in request.args.getlist('in') %}checked{% endif %}
                                                     onchange="updateDropdownText('inDropdown')">
                                                 Description
                                             </label>
@@ -179,7 +179,10 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="apply-filters">Apply Filters</button>
+                        <div class="filter-buttons">
+                            <button type="submit" class="apply-filters">Apply Filters</button>
+                            <button type="button" class="clear-filters" onclick="clearFilters()">Clear Filters</button>
+                        </div>
                     </div>
                 </form>
                 <ul id="suggestions"></ul>

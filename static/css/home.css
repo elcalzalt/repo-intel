@@ -341,10 +341,16 @@ nav li a:hover {
     font-weight: 600;
 }
 
-.apply-filters {
-    width: 100%;
-    padding: 0.8em;
+/* Filter buttons container */
+.filter-buttons {
+    display: flex;
+    gap: 0.8em;
     margin-top: 0.5em;
+}
+
+.apply-filters {
+    flex: 2;
+    padding: 0.8em;
     background: #00adb5;
     color: white;
     border: none;
@@ -357,6 +363,27 @@ nav li a:hover {
 
 .apply-filters:hover {
     background: #007f8f;
+}
+
+.clear-filters {
+    flex: 1;
+    padding: 0.8em;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.clear-filters:hover {
+    background: #5a6268;
 }
 
 /* Responsive Media Queries */
@@ -400,6 +427,16 @@ nav li a:hover {
     .dropdown-selected {
         height: 36px;
         padding: 0.5em 0.7em;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+        gap: 0.6em;
+    }
+    
+    .clear-filters,
+    .apply-filters {
+        flex: none;
     }
 }
 
@@ -691,16 +728,6 @@ a:visited {
     color: #e0e0e0;
 }
 
-.dark .filter-section select {
-    background: #333;
-    color: #e0e0e0;
-    border-color: #555;
-}
-
-.dark .filter-section label {
-    color: #bbb;
-}
-
 .dark .apply-filters {
     background: #00ffc3;
     color: #222;
@@ -708,6 +735,15 @@ a:visited {
 
 .dark .apply-filters:hover {
     background: #00c9a7;
+}
+
+.dark .clear-filters {
+    background: #555;
+    color: #e0e0e0;
+}
+
+.dark .clear-filters:hover {
+    background: #666;
 }
 
 .dark #suggestions {
@@ -769,4 +805,9 @@ a:visited {
 .dark #searchInput {
     color: #e0e0e0;
     caret-color: #e0e0e0;
+}
+
+.filter-buttons {
+    width: 50%;
+    margin: auto;
 }
