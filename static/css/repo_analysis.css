@@ -174,6 +174,120 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Enhanced Loading Indicators */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-container {
+    background: white;
+    border-radius: 16px;
+    padding: 3em 2em;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.loading-overlay.active .loading-container {
+    transform: scale(1);
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #00adb5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.loading-text {
+    color: #222831;
+    margin-bottom: 10px;
+}
+
+.loading-text h3 {
+    color: #00adb5;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.loading-text p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+.loading-progress {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #f0f0f0;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00adb5, #007f8f);
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progressPulse 2s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* Scan-specific loading states */
+.scan-loading .file-tree {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.scan-loading .file-tree::after {
+    content: "🔍 Analyzing files...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #00adb5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.scan-loading .file-tree {
+    position: relative;
+}
+
 /* Results Section */
 .results-section {
     background: #f8f9fa;
@@ -308,32 +422,65 @@
     margin-top: 2em;
 }
 
-/* File Tree Styles */
+/* File Tree Styles - Enhanced */
 .file-tree {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: 1em;
-  border: 1px solid #ccc;
-  padding: 1em;
-  border-radius: 8px;
-  background: #ffffff;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    padding: 1em;
+    border-radius: 12px;
+    background: #ffffff;
+    position: relative;
+    transition: all 0.3s ease;
 }
+
 .file-tree ul {
-  list-style: none;
-  padding-left: 1em;
-  margin: 0;
+    list-style: none;
+    padding-left: 1em;
+    margin: 0;
 }
+
 .file-tree li.directory {
-  font-weight: bold;
-  cursor: pointer;
-  color: #00adb5;
+    font-weight: bold;
+    cursor: pointer;
+    color: #00adb5;
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
+
+.file-tree li.directory:before {
+    content: "📁 ";
+    margin-right: 6px;
+}
+
 .file-tree li.file {
-  cursor: pointer;
-  color: #333333;
+    cursor: pointer;
+    color: #333333;
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
+
+.file-tree li.file:before {
+    content: "📄 ";
+    margin-right: 6px;
+}
+
 .file-tree li:hover {
-  background: #e0f7fa;
+    background: #e8f5ff;
+    border-color: #00adb5;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 173, 181, 0.1);
+}
+
+.file-tree li:active {
+    transform: scale(0.98) translateX(2px);
 }
 
 /* Utility Classes */

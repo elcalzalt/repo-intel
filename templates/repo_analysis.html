@@ -5,6 +5,23 @@
 {% endblock %}
 
 {% block content %}
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">
+            <h3 id="loading-title">🔍 Analyzing Repository</h3>
+            <p id="loading-message">Please wait while we process your request...</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text" style="font-size: 0.85rem; color: #888; margin-top: 5px;">Initializing...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <main>
     <section class="repo-header">
         <div class="repo-info">
@@ -145,6 +162,78 @@
     // Store last generated markdown and track scanned file
     let lastSummaryMd = '';
     let lastScanMd = '';
+    let progressInterval;
+
+    // Enhanced Loading Management
+    const LoadingManager = {
+        show: function(title, message) {
+            const overlay = document.getElementById('loading-overlay');
+            const titleEl = document.getElementById('loading-title');
+            const messageEl = document.getElementById('loading-message');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Initializing...';
+            
+            overlay.classList.add('active');
+            this.startProgressAnimation();
+        },
+
+        hide: function() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.remove('active');
+            this.stopProgressAnimation();
+        },
+
+        updateProgress: function(percentage, text) {
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            progressFill.style.width = percentage + '%';
+            if (text) progressText.textContent = text;
+        },
+
+        updateMessage: function(message) {
+            const messageEl = document.getElementById('loading-message');
+            messageEl.textContent = message;
+        },
+
+        startProgressAnimation: function() {
+            let progress = 0;
+            const messages = [
+                'Connecting to repository...',
+                'Fetching file structure...',
+                'Reading file contents...',
+                'AI is analyzing the code...',
+                'Processing insights...',
+                'Generating report...'
+            ];
+            let messageIndex = 0;
+
+            progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90; // Don't complete until actual completion
+                
+                this.updateProgress(progress, messages[messageIndex]);
+                
+                if (Math.random() > 0.7 && messageIndex < messages.length - 1) {
+                    messageIndex++;
+                }
+            }, 1500);
+        },
+
+        stopProgressAnimation: function() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            this.updateProgress(100, 'Complete!');
+        }
+    };
+
     // Display file tree in UI
     function showFileTree(tree, currentPath) {
         const treeContainer = document.getElementById('file-tree');
@@ -154,13 +243,25 @@
             const li = document.createElement('li');
             li.textContent = item.name;
             li.classList.add(item.type === 'dir' ? 'directory' : 'file');
-            li.addEventListener('click', () => {
+            li.addEventListener('click', (e) => {
+                // Add visual feedback
+                li.style.background = '#00adb5';
+                li.style.color = 'white';
+                li.style.transform = 'scale(0.98)';
+                
                 const path = item.path;
                 if (item.type === 'dir') {
                     loadDirectory(path);
                 } else {
                     initiateScan(path);
                 }
+                
+                // Reset visual feedback after a delay
+                setTimeout(() => {
+                    li.style.background = '';
+                    li.style.color = '';
+                    li.style.transform = '';
+                }, 200);
             });
             ul.appendChild(li);
         });
@@ -171,6 +272,8 @@
 
     // Fetch directory contents
     async function loadDirectory(path) {
+        LoadingManager.show('📁 Loading Directory', `Loading contents of ${path}...`);
+        
         try {
             const response = await fetch('/api/file-tree', {
                 method: 'POST',
@@ -178,20 +281,30 @@
                 body: JSON.stringify({ repo_name: repoData.full_name, file_path: path })
             });
             const result = await response.json();
+            
             if (result.success) {
-                showFileTree(result.file_tree, path);
+                LoadingManager.updateProgress(100, 'Directory loaded!');
+                setTimeout(() => {
+                    LoadingManager.hide();
+                    showFileTree(result.file_tree, path);
+                }, 400);
             } else {
+                LoadingManager.hide();
                 alert('Failed to load directory');
             }
         } catch (error) {
+            LoadingManager.hide();
             console.error('Directory load error:', error);
+            alert('Error loading directory. Please try again.');
         }
     }
 
     // Track last scanned file path
     let lastScannedPath = '';
-    // Initiate file scan
+    // Initiate file scan with enhanced loading
     async function initiateScan(filePath) {
+        LoadingManager.show('🔍 Scanning File', 'Analyzing code quality and security...');
+        
         try {
             const response = await fetch('/api/scan', {
                 method: 'POST',
@@ -199,22 +312,32 @@
                 body: JSON.stringify({ repo_name: repoData.full_name, file_path: filePath })
             });
             const result = await response.json();
+            
             // store markdown for export
             lastScanMd = result.scan_results_md;
             lastScannedPath = filePath;
+            
             if (result.success) {
-                showResults('scan', result.scan_results_html);
+                LoadingManager.updateProgress(100, 'Analysis complete!');
+                setTimeout(() => {
+                    LoadingManager.hide();
+                    showResults('scan', result.scan_results_html);
+                }, 800);
             } else {
+                LoadingManager.hide();
                 alert('Scan failed: ' + result.message);
             }
         } catch (error) {
+            LoadingManager.hide();
             console.error('Scan error:', error);
+            alert('Error during scan. Please try again.');
         }
     }
 
     async function summarizeRepo() {
         const button = document.querySelector('#summarize-card button');
         setButtonLoading(button, true);
+        LoadingManager.show('📄 Generating Summary', 'AI is analyzing the repository structure and content...');
 
         try {
             const response = await fetch('/api/summarize', {
@@ -233,11 +356,17 @@
             if (result.success) {
                 // store generated markdown for export
                 lastSummaryMd = result.summary_md;
-                showResults('summary', result.summary_html);
+                LoadingManager.updateProgress(100, 'Summary generated!');
+                setTimeout(() => {
+                    LoadingManager.hide();
+                    showResults('summary', result.summary_html);
+                }, 800);
             } else {
+                LoadingManager.hide();
                 alert('Failed to generate summary: ' + result.message);
             }
         } catch (error) {
+            LoadingManager.hide();
             alert('Error generating summary. Please try again.');
             console.error('Summary error:', error);
         } finally {
@@ -248,6 +377,8 @@
     async function scanRepo() {
         const button = document.querySelector('#scan-card button');
         setButtonLoading(button, true);
+        LoadingManager.show('🔍 Loading File Tree', 'Fetching repository structure...');
+        
         // clear any prior scan content and show tree on new scan
         document.getElementById('scan-content').innerHTML = '';
 
@@ -260,11 +391,17 @@
             const result = await response.json();
 
             if (result.success) {
-                showFileTree(result.file_tree, '');
+                LoadingManager.updateProgress(100, 'File tree loaded!');
+                setTimeout(() => {
+                    LoadingManager.hide();
+                    showFileTree(result.file_tree, '');
+                }, 600);
             } else {
+                LoadingManager.hide();
                 alert('Failed to load file tree');
             }
         } catch (error) {
+            LoadingManager.hide();
             alert('Error loading file tree.');
             console.error('File tree error:', error);
         } finally {
