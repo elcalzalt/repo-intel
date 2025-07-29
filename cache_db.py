@@ -7,7 +7,6 @@ class CacheDatabase:
         # Establish a connection and prepare metadata registry
         # Define tables and create them if they do not exist
         self.engine = db.create_engine(db_path)
-        self.connection = self.engine.connect()
         self.metadata = db.MetaData()
         self.define_tables()
         self.metadata.create_all(self.engine)
@@ -34,6 +33,13 @@ class CacheDatabase:
 
     def insert_data(self, table, data):
         # Insert the provided data dictionary into the specified table
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(table.insert(), data)
+                return True
+        except Exception:
+            return False
+
         self.connection.execute(table.insert(), data)
 
     def delete_entry(self, repo_name, table, file_path=None):
@@ -44,7 +50,12 @@ class CacheDatabase:
         else:
             stmt = db.delete(table).where(table.c.repo_name == repo_name)
         # Execute the delete statement to remove matching cache entries
-        self.connection.execute(stmt)
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(stmt)
+                return True
+        except Exception:
+            return False
 
     def get_recent_cache(self, repo_name, table, updated_at, file_path=None):
         # Build a select query filtering by repo_name and optional file_path
@@ -55,7 +66,11 @@ class CacheDatabase:
         else:
             query = db.select(table).where(table.c.repo_name == repo_name)
         # Execute the query and fetch the first result (or None)
-        result = self.connection.execute(query).fetchone()
+        try:
+            with self.engine.begin() as conn:
+                result = conn.execute(query).fetchone()
+        except Exception:
+            result = None
         # If no entry is found, return (None, found=False, fresh=False)
         if result is None:
             return None, False, False
