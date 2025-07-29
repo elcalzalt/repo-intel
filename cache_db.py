@@ -1,5 +1,5 @@
 import sqlalchemy as db
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 class CacheDatabase:
     def __init__(self, db_path='sqlite:///cache.db'):
@@ -31,6 +31,19 @@ class CacheDatabase:
             db.Column("full_path", db.String(40), primary_key=True)
         )
 
+        self.trendy_cache = db.Table(
+            "trendy_cache", self.metadata,
+            db.Column("id", db.Integer, primary_key=True, autoincrement=True),
+            db.Column("repo_list", db.JSON),
+            db.Column(
+                "updated_at",
+                db.DateTime(timezone=True),
+                default=lambda: datetime.now(timezone.utc),
+                server_default=db.func.now(),
+                nullable=False
+            )
+        )
+
     def insert_data(self, table, data):
         # Insert the provided data dictionary into the specified table
         try:
@@ -39,8 +52,6 @@ class CacheDatabase:
                 return True
         except Exception:
             return False
-
-        self.connection.execute(table.insert(), data)
 
     def delete_entry(self, repo_name, table, file_path=None):
         if file_path is not None:
@@ -82,3 +93,24 @@ class CacheDatabase:
         else:
             # Entry exists but is stale compared to requested timestamp
             return response, True, False
+        
+    def check_trendy(self):
+        # Return (repo_list, is_fresh) where is_fresh is True if updated_at < 30 minutes ago.
+        # select the one trendy_cache row
+        stmt = db.select(self.trendy_cache)
+        with self.engine.begin() as conn:
+            row = conn.execute(stmt).fetchone()
+
+        if not row:
+            return None, False
+
+        repo_list, updated_at = row[1], row[2]
+
+        # ensure updated_at is timezone-aware
+        if updated_at.tzinfo is None:
+            updated_at = updated_at.replace(tzinfo=timezone.utc)
+
+        threshold = datetime.now(timezone.utc) - timedelta(minutes=30)
+        is_fresh = updated_at >= threshold
+
+        return repo_list, is_fresh

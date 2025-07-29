@@ -1,7 +1,12 @@
 import requests, re
 from datetime import datetime, timedelta
+from app import cache
 
 def getTrendy():
+    ch = cache.check_trendy()
+    if ch[1] is True:
+        return ch[0]
+    
     six_months_ago = (datetime.now() - timedelta(days=183)).strftime('%Y-%m-%d')
     query = f"created:>{six_months_ago}"
     url = "https://api.github.com/search/repositories"
@@ -18,7 +23,7 @@ def getTrendy():
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     data = response.json()
-    return [
+    repos = [
         {
             "name": repo["full_name"],
             "description": repo["description"],
@@ -29,6 +34,12 @@ def getTrendy():
         }
         for repo in data.get("items", [])
     ]
+
+    cache.insert_data(cache.trendy_cache, {
+        "repo_list": repos
+    })
+
+    return repos
 
 def clean_user_query(raw_query):
     cleaned = raw_query.strip()
