@@ -33,7 +33,10 @@ class AIAnalyzer:
         for i in range(len(issues)):
             istr += f"issue {i+1}:\n"
             istr += "title: " + issues[i][0] + "\n"
-            istr += "body:\n" + issues[i][1] + "\n"
+            if type(issues[i][1]) is str:
+                istr += "body:\n" + issues[i][1] + "\n"
+            else:
+                istr += "body:\n(no body)\n"
             istr += "created date: " + issues[i][2] + "\n"
 
         return istr
