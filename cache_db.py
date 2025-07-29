@@ -45,6 +45,16 @@ class CacheDatabase:
         )
 
     def insert_data(self, table, data):
+        try:
+            with self.engine.begin() as conn:
+                if table is self.trendy_cache:
+                    # ensure only one entry in trendy_cache
+                    conn.execute(db.delete(table))
+                conn.execute(table.insert(), data)
+                return True
+        except Exception:
+            return False
+        
         # Insert the provided data dictionary into the specified table
         try:
             with self.engine.begin() as conn:
