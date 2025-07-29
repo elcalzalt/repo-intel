@@ -115,6 +115,11 @@ def logout():
 def repo_analysis(repo_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    
+    # Restore the user context
+    user_manager.current_user_id   = session['user_id']
+    user_manager.current_username = session['username']
+
     # Determine data source: POST from search or GET with query params after bookmark toggle
     data = request.form if request.method == 'POST' else request.args
     full_name = data.get('full_name', repo_name)
@@ -328,6 +333,10 @@ def api_bookmark():
 def toggle_bookmark():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    
+    # Restore the user context
+    user_manager.current_user_id   = session['user_id']
+    user_manager.current_username = session['username']
 
     action = request.form['action']
     
