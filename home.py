@@ -1,8 +1,8 @@
 import requests, re
 from datetime import datetime, timedelta
-from app import cache
 
 def getTrendy():
+    from app import cache
     ch = cache.check_trendy()
     if ch[1] is True:
         return ch[0]
