@@ -1,5 +1,7 @@
 import requests, re
+from requests.exceptions import HTTPError
 from datetime import datetime, timedelta
+import os
 
 def getTrendy():
     from app import cache
@@ -17,12 +19,23 @@ def getTrendy():
         "per_page": 20
     }
 
+    token = os.getenv("GITHUB_TOKEN")
+    # use Bearer auth scheme for GitHub PAT
     headers = {
         "Accept": "application/vnd.github+json",
-        'Authorization': 'Bearer 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'
+        **({"Authorization": f"Bearer {token}"} if token else {})
     }
     response = requests.get(url, headers=headers, params=params)
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except HTTPError as e:
+        if response.status_code == 401:
+            # invalid token: retry unauthenticated
+            headers.pop("Authorization", None)
+            response = requests.get(url, headers=headers, params=params)
+            response.raise_for_status()
+        else:
+            raise
     data = response.json()
     repos = [
         {

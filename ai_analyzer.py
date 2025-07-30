@@ -3,9 +3,9 @@ from google.genai import types
 import os
 
 class AIAnalyzer:
-    def __init__(self, key: str):
+    def __init__(self, key):
         # Initialize AI client with provided API key and set base directory for instructions
-        self.client = genai.Client(api_key='AIzaSyDg0zwD9K4PD8vBgoFIUHARYOrG7Q2VlT8')
+        self.client = genai.Client(api_key=key)
         self.base_dir = os.path.dirname(__file__)
 
     def commit_str(self, commit):
