@@ -451,7 +451,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Authors
 
 - [@elcalzalt](https://github.com/elcalzalt)
-- [@MustafaTahir0](https://github.com/MustafaTahir0)
+- [@Mustafa-Tahir0](https://github.com/Mustafa-Tahir0)
 - [@Angelal78](https://github.com/Angelal78)
 - [@abigaelod](https://github.com/abigaelod)
 
