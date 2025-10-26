@@ -448,12 +448,12 @@ Contributions are welcome! Here's how you can help:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- [@elcalzalt](https://github.com/elcalzalt)
+- [@MustafaTahir0](https://github.com/MustafaTahir0)
+- [@Angelal78](https://github.com/Angelal78)
+- [@abigaelod](https://github.com/abigaelod)
 
 ## 🙏 Acknowledgments
 
